@@ -6,7 +6,7 @@ import Center from "@/components/Center";
 // import BarsIcon from "@/components/icons/Bars";
 
 const StyledHeader = styled.header`
-  background-color: #222;`;
+  background-color: #00BFFF;`;
 const Logo = styled(Link)`
   color:#fff;
   text-decoration:none;
@@ -31,7 +31,7 @@ const StyledNav = styled.nav`
   left: 0;
   right: 0;
   padding: 70px 20px 20px;
-  background-color: #222;
+  
   @media screen and (min-width: 768px) {
     display: flex;
     position: static;
@@ -40,7 +40,7 @@ const StyledNav = styled.nav`
 `;
 const NavLink = styled(Link)`
   display: block;
-  color:#aaa;
+  color: #fff;
   text-decoration:none;
   padding: 10px 0;
   @media screen and (min-width: 768px) {
@@ -68,17 +68,17 @@ export default function Header() {
     <StyledHeader>
       <Center>
         <Wrapper>
-          <Logo href={'/'}>Ecommerce</Logo>
+          <Logo href={'/'}>Purifier</Logo>
           <StyledNav>
-            <Link href={'/'}>Home</Link>
-            <Link href={'/products'}>All products</Link>
-            <Link href={'/categories'}>Categories</Link>
-            <Link href={'/account'}>Account</Link>
-            <Link href={'/cart'}>Cart</Link>
+            <NavLink href={'/'}>หน้าแรก</NavLink>
+            <NavLink href={'/products'}>สินค้า</NavLink>
+            <NavLink href={'/categories'}>หมวดหมู่</NavLink>
+            <NavLink href={'/account'}>แอคเคาท์</NavLink>
+            <NavLink href={'/cart'}>รถเข็น</NavLink>
           </StyledNav>
-          <NavButton onClick={() => setMobileNavActive(prev => !prev)}>
-            {/* <BarsIcon /> */}
-          </NavButton>
+          {/* <NavButton onClick={() => setMobileNavActive(prev => !prev)}>
+            <BarsIcon />
+          </NavButton> */}
         </Wrapper>
       </Center>
     </StyledHeader>
