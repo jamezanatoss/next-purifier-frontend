@@ -73,7 +73,7 @@ export default function Header() {
             <NavLink href={'/'}>หน้าแรก</NavLink>
             <NavLink href={'/products'}>สินค้า</NavLink>
             <NavLink href={'/categories'}>หมวดหมู่</NavLink>
-            <NavLink href={'/account'}>Account</NavLink>
+            <NavLink href={'/account'}>แอคเคาท์</NavLink>
             <NavLink href={'/cart'}>รถเข็น (0)</NavLink>
           </StyledNav>
           <NavButton onClick={() => setMobileNavActive(prev => !prev)}>

@@ -7,7 +7,7 @@ import {useContext} from "react";
 import {CartContext} from "@/components/CartContext";
 
 const Bg = styled.div`
-  background-color: #222;
+  background-color: #999;
   color:#fff;
   padding: 50px 0;
 `;
@@ -80,7 +80,7 @@ export default function Featured({product}) {
             </div>
           </Column>
           <Column>
-            <img src="https://dawid-next-ecommerce.s3.amazonaws.com/1679151719649.png" alt=""/>
+            <img src="https://next-purifier.s3.amazonaws.com/1683449897835.png" alt=""/>
           </Column>
         </ColumnsWrapper>
       </Center>
