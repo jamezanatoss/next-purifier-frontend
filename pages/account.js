@@ -68,8 +68,8 @@ export default function AccountPage() {
       return;
     }
     setAddressLoaded(false);
-    // setWishlistLoaded(false);
-    // setOrderLoaded(false);
+    setWishlistLoaded(false);
+    setOrderLoaded(false);
     axios.get('/api/address').then(response => {
       setName(response.data.name);
       setEmail(response.data.email);
@@ -79,14 +79,14 @@ export default function AccountPage() {
       setCountry(response.data.country);
       setAddressLoaded(true);
     });
-    // axios.get('/api/wishlist').then(response => {
-    //   setWishedProducts(response.data.map(wp => wp.product));
-    //   setWishlistLoaded(true);
-    // });
-    // axios.get('/api/orders').then(response => {
-    //   setOrders(response.data);
-    //   setOrderLoaded(true);
-    // });
+    axios.get('/api/wishlist').then(response => {
+      setWishedProducts(response.data.map(wp => wp.product));
+      setWishlistLoaded(true);
+    });
+    axios.get('/api/orders').then(response => {
+      setOrders(response.data);
+      setOrderLoaded(true);
+    });
   }, [session]);
   function productRemovedFromWishlist(idToRemove) {
     setWishedProducts(products => {
@@ -111,11 +111,11 @@ export default function AccountPage() {
             <RevealWrapper delay={0}>
               <WhiteBox>
                 <Tabs
-                  tabs={['Orders','Wishlist']}
+                  tabs={['คำสั่งซื้อ','รายการโปรด']}
                   active={activeTab}
                   onChange={setActiveTab}
                 />
-                {activeTab === 'Orders' && (
+                {activeTab === 'คำสั่งซื้อ' && (
                   <>
                     {!orderLoaded && (
                       <Spinner fullWidth={true} />
@@ -123,7 +123,7 @@ export default function AccountPage() {
                     {orderLoaded && (
                       <div>
                         {orders.length === 0 && (
-                          <p>Login to see your orders</p>
+                          <p>คุณยังไม่มีคำสั่งซื้อ</p>
                         )}
                         {orders.length > 0 && orders.map(o => (
                           <SingleOrder {...o} />
@@ -132,7 +132,7 @@ export default function AccountPage() {
                     )}
                   </>
                 )}
-                {activeTab === 'Wishlist' && (
+                {activeTab === 'รายการโปรด' && (
                   <>
                     {!wishlistLoaded && (
                       <Spinner fullWidth={true} />
@@ -147,10 +147,10 @@ export default function AccountPage() {
                         {wishedProducts.length === 0 && (
                           <>
                             {session && (
-                              <p>Your wishlist is empty</p>
+                              <p>คุณยังไม่ได้เพิ่มรายการโปรด</p>
                             )}
                             {!session && (
-                              <p>Login to add products to your wishlist</p>
+                              <p>กรุณาเข้าสู่ระบบก่อน</p>
                             )}
                           </>
                         )}
@@ -164,7 +164,7 @@ export default function AccountPage() {
           <div>
             <RevealWrapper delay={100}>
               <WhiteBox>
-                <h2>{session ? 'Account details' : 'Login'}</h2>
+                <h2>{session ? 'ข้อมูลผู้ใช้งาน' : 'เข้าสู่ระบบ'}</h2>
                 {!addressLoaded && (
                   <Spinner fullWidth={true} />
                 )}
@@ -205,16 +205,16 @@ export default function AccountPage() {
                     <Button black block
                       onClick={fireSweetAlert}
                     >
-                      Save
+                      บันทึก
                     </Button>
                     <hr />
                   </>
                 )}
                 {session && (
-                  <Button primary onClick={logout}>Logout</Button>
+                  <Button primary onClick={logout}>ออกจากระบบ</Button>
                 )}
                 {!session && (
-                  <Button primary onClick={login}>Login</Button>
+                  <Button primary onClick={login}>เข้าสู่ระบบ</Button>
                 )}
               </WhiteBox>
             </RevealWrapper>
