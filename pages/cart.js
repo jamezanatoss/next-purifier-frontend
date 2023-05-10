@@ -174,7 +174,7 @@ export default function CartPage() {
         <ColumnsWrapper>
           <RevealWrapper delay={0}>
             <Box>
-              <h2>Cart</h2>
+              <h2>รถเข็น</h2>
               {!cartProducts?.length && (
                 <div>Your cart is empty</div>
               )}
@@ -230,7 +230,7 @@ export default function CartPage() {
           {!!cartProducts?.length && (
             <RevealWrapper delay={100}>
               <Box>
-                <h2>Order information</h2>
+                <h2>ข้อมูลก่อนจัดส่ง</h2>
                 <Input type="text"
                        placeholder="Name"
                        value={name}
@@ -265,7 +265,7 @@ export default function CartPage() {
                        onChange={ev => setCountry(ev.target.value)}/>
                 <Button black block
                         onClick={goToPayment}>
-                  Continue to payment
+                  ชำระเงิน
                 </Button>
               </Box>
             </RevealWrapper>

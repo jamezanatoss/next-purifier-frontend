@@ -6,8 +6,8 @@ import FlyingButton from "@/components/FlyingButton";
 import {RevealWrapper} from 'next-reveal'
 
 const Bg = styled.div`
-  background-color: #222;
-  color:#fff;
+  background-color: #e8eaf6;
+  color:#222;
   padding: 50px 0;
 `;
 const Title = styled.h1`
@@ -19,7 +19,7 @@ const Title = styled.h1`
   }
 `;
 const Desc = styled.p`
-  color:#aaa;
+  color:#222;
   font-size:.8rem;
 `;
 const ColumnsWrapper = styled.div`
@@ -87,7 +87,7 @@ export default function Featured({product}) {
                     <ButtonLink href={'/product/'+product._id} outline={1} white={1}>Read more</ButtonLink>
                     <FlyingButton white={1} _id={product._id} src={product.images?.[0]}>
                       <CartIcon />
-                      Add to cart
+                      รถเข็น
                     </FlyingButton>
                   </ButtonsWrapper>
                 </ContentWrapper>

@@ -68,7 +68,7 @@ export default function Header() {
     <StyledHeader>
       <Center>
         <Wrapper>
-          <Logo href={'/'}>Purifier</Logo>
+          <Logo href={'/'}>เครื่องกรอง</Logo>
           <StyledNav>
             <NavLink href={'/'}>หน้าแรก</NavLink>
             <NavLink href={'/products'}>สินค้า</NavLink>
