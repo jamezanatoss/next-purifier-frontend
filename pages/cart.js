@@ -222,15 +222,15 @@ export default function CartPage() {
                       </tr>
                     ))}
                     <tr className="subtotal">
-                      <td colSpan={2}>Products</td>
+                      <td colSpan={2}>ราคาสินค้า</td>
                       <td>{productsTotal}&nbsp;บาท</td>
                     </tr>
                     <tr className="subtotal">
-                      <td colSpan={2}>Shipping</td>
+                      <td colSpan={2}>ค่าส่ง</td>
                       <td>{shippingFee}&nbsp;บาท</td>
                     </tr>
                     <tr className="subtotal total">
-                      <td colSpan={2}>Total</td>
+                      <td colSpan={2}>ราคารวม</td>
                       <td>{productsTotal + parseInt(shippingFee || 0)}&nbsp;บาท</td>
                     </tr>
                   </tbody>

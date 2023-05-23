@@ -4,6 +4,7 @@ import Center from "@/components/Center";
 import {useContext, useState} from "react";
 import {CartContext} from "@/components/CartContext";
 import BarsIcon from "@/components/icons/Bars";
+import SearchIcon from "@/components/icons/SearchIcon";
 
 const StyledHeader = styled.header`
   background-color: #00BFFF;`;
@@ -61,6 +62,20 @@ const NavButton = styled.button`
   }
 `;
 
+const SideIcons = styled.div`
+  display: flex;
+  align-items: center;
+  a{
+    display:inline-block;
+    min-width:20px;
+    color:white;
+    svg{
+      width:14px;
+      height:14px;
+    }
+  }
+`;
+
 export default function Header() {
   const {cartProducts} = useContext(CartContext);
  const [mobileNavActive,setMobileNavActive] = useState(false);
@@ -76,9 +91,12 @@ export default function Header() {
             <NavLink href={'/account'}>แอคเคาท์</NavLink>
             <NavLink href={'/cart'}>รถเข็น ({cartProducts.length})</NavLink>
           </StyledNav>
-          <NavButton onClick={() => setMobileNavActive(prev => !prev)}>
-            <BarsIcon />
-          </NavButton>
+         <SideIcons>
+            <Link href={'/search'}><SearchIcon /></Link>
+            <NavButton onClick={() => setMobileNavActive(prev => !prev)}>
+              <BarsIcon />
+            </NavButton>
+          </SideIcons>
         </Wrapper>
       </Center>
     </StyledHeader>

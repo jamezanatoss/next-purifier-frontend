@@ -53,13 +53,10 @@ export default function ProductPage({ product }) {
             </PriceRow>
           </div>
 
-          <div>
-
-          <Neoplus product={product._id}> </Neoplus>
-
-          </div>
+          
 
         </ColWrapper>
+          <Neoplus product={product._id} price={product.price} title={product.title} /> 
         {/* <ProductReviews product={product} /> */}
       </Center>
 
