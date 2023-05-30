@@ -33,8 +33,8 @@ const FlyingButtonWrapper = styled.div`
   }
   img{
     display:none;
-    max-width: 100px;
-    max-height: 100px;
+    max-width: 120px;
+    max-height: 120px;
     opacity: 1;
     position: fixed;
     z-index: 5;

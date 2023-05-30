@@ -187,7 +187,7 @@ export default function CartPage() {
             <Box>
               <h2>รถเข็น</h2>
               {!cartProducts?.length && (
-                <div>Your cart is empty</div>
+                <div>ยังไม่มีรถเข็น</div>
               )}
               {products?.length > 0 && (
                 <Table>

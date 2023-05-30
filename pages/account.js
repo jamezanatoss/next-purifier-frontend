@@ -107,7 +107,7 @@ export default function AccountPage() {
       <Header />
       <Center>
         <ColsWrapper>
-          {/* <div>
+          <div>
             <RevealWrapper delay={0}>
               <WhiteBox>
                 <Tabs
@@ -160,7 +160,7 @@ export default function AccountPage() {
                 )}
               </WhiteBox>
             </RevealWrapper>
-          </div> */}
+          </div>
           <div>
             <RevealWrapper delay={100}>
               <WhiteBox>
