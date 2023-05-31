@@ -59,9 +59,7 @@ export default function CategoriesPage({mainCategories,categoriesProducts,wished
           <CategoryWrapper>
             <CategoryTitle>
               <h2>{cat.name}</h2>
-              <div>
-                <Link href={'/category/'+cat._id}>Show all</Link>
-              </div>
+             
             </CategoryTitle>
             <CategoryGrid>
               {categoriesProducts[cat._id].map((p,index) => (
@@ -71,7 +69,7 @@ export default function CategoriesPage({mainCategories,categoriesProducts,wished
               ))}
               <RevealWrapper delay={categoriesProducts[cat._id].length*50}>
                 <ShowAllSquare href={'/category/'+cat._id}>
-                  Show all &rarr;
+                  Show ทั้งหมด &rarr;
                 </ShowAllSquare>
               </RevealWrapper>
             </CategoryGrid>
