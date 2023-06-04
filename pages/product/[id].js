@@ -28,8 +28,21 @@ const PriceRow = styled.div`
 const Price = styled.span`
   font-size: 1.4rem;
 `;
+const Card = styled.div`
+
+`;
+
 
 export default function ProductPage({ product }) {
+  let priceArray = []
+  if(product.price == 39800){
+    priceArray[0] = 690;
+    priceArray[1] = 790;
+    priceArray[2] = 39800;  
+  }
+
+  console.log(priceArray)
+  
   return (
     <>
       <Header />
@@ -39,35 +52,42 @@ export default function ProductPage({ product }) {
             <ProductImages images={product.images} />
           </WhiteBox>
           <div>
-            <Title>{product.title}</Title>
+            <Title>
+              {product.title}</Title>
+            <p>ตัวเลือกบริการ</p>
             <p>{product.description}</p>
             <PriceRow>
               <div>
-                <Price>{product.price}&nbsp;บาท</Price>
+                <Price>{priceArray[0]}&nbsp;บาท</Price><br />
+                <Price>{priceArray[1]}&nbsp;บาท</Price><br />
+                <Price>{priceArray[2]}&nbsp;บาท</Price><br />
               </div>
               <div>
-                <FlyingButton main _id={product._id} src={product.images?.[0]}>
+                <FlyingButton main _id={product._id} >
+                  <CartIcon />รถเข็น
+                </FlyingButton>
+                <FlyingButton main _id={product._id}>
+                  <CartIcon />รถเข็น
+                </FlyingButton>
+                <FlyingButton main _id={product._id} >
                   <CartIcon />รถเข็น
                 </FlyingButton>
               </div>
             </PriceRow>
           </div>
 
-          
+
 
         </ColWrapper>
-          <Neoplus product={product._id} price={product.price} title={product.title} /> 
+        <Neoplus product={product._id} price={product.price} title={product.title} />
         {/* <ProductReviews product={product} /> */}
       </Center>
 
     </>
 
-
   )
 
-
 }
-
 
 export async function getServerSideProps(context) {
   await mongooseConnect();
