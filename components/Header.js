@@ -86,11 +86,12 @@ export default function Header() {
           <Logo href={'/'}>เครื่องกรอง</Logo>
           <StyledNav>
             <NavLink href={'/'}>หน้าแรก</NavLink>
-            <NavLink href={'/products'}>สินค้า</NavLink>
-            <NavLink href={'/categories'}>หมวดหมู่</NavLink>
+            {/* <NavLink href={'/products'}>สินค้า</NavLink> */}
+            <NavLink href={'/categories'}>สินค้า</NavLink>
             <NavLink href={'/account'}>แอคเคาท์</NavLink>
-            <NavLink href={'/cart'}>รถเข็น ({cartProducts.length})</NavLink>
             <NavLink href={'/contact'}>ติดต่อ </NavLink>
+            <NavLink href={'/cart'}>รถเข็น ({cartProducts.length})</NavLink>
+            
           </StyledNav>
          <SideIcons>
             <Link href={'/search'}><SearchIcon /></Link>

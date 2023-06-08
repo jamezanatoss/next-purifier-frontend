@@ -12,8 +12,11 @@ import {
   } from "@chakra-ui/react";
   import { useState } from "react";
   import { sendContactForm } from "../lib/api";
+  import Header from "@/components/Header";
+  import { ChakraProvider } from "@chakra-ui/react";
+  import Footer from "@/components/Footer";
   
-  const initValues = { name: "", email: "", subject: "", message: "" };
+  const initValues = { name: "", phone: "", email: "", subject: "", message: "" };
   
   const initState = { isLoading: false, error: "", values: initValues };
   
@@ -59,10 +62,15 @@ import {
         }));
       }
     };
-  
+
     return (
-      <Container maxW="450px" mt={12}>
-        <Heading>Contact</Heading>
+      
+      <ChakraProvider>
+        <Header />
+        <Container maxW="800px " mt={0}>
+        <br />
+        <Heading>ติดต่อ</Heading>
+        <br />
         {error && (
           <Text color="red.300" my={4} fontSize="xl">
             {error}
@@ -70,7 +78,7 @@ import {
         )}
   
         <FormControl isRequired isInvalid={touched.name && !values.name} mb={5}>
-          <FormLabel>Name</FormLabel>
+          <FormLabel>ชื่อ</FormLabel>
           <Input
             type="text"
             name="name"
@@ -81,9 +89,22 @@ import {
           />
           <FormErrorMessage>Required</FormErrorMessage>
         </FormControl>
+
+        <FormControl isRequired isInvalid={touched.phone && !values.phone} mb={5}>
+          <FormLabel>โทรศัพท์</FormLabel>
+          <Input
+            type="text"
+            name="phone"
+            errorBorderColor="red.300"
+            value={values.phone}
+            onChange={handleChange}
+            onBlur={onBlur}
+          />
+          <FormErrorMessage>Required</FormErrorMessage>
+        </FormControl>
   
         <FormControl isRequired isInvalid={touched.email && !values.email} mb={5}>
-          <FormLabel>Email</FormLabel>
+          <FormLabel>อีเมล</FormLabel>
           <Input
             type="email"
             name="email"
@@ -100,7 +121,7 @@ import {
           isRequired
           isInvalid={touched.subject && !values.subject}
         >
-          <FormLabel>Subject</FormLabel>
+          <FormLabel>หัวข้อ</FormLabel>
           <Input
             type="text"
             name="subject"
@@ -117,7 +138,7 @@ import {
           isInvalid={touched.message && !values.message}
           mb={5}
         >
-          <FormLabel>Message</FormLabel>
+          <FormLabel>หมายเหตุ</FormLabel>
           <Textarea
             type="text"
             name="message"
@@ -141,6 +162,12 @@ import {
         >
           Submit
         </Button>
-      </Container>
+        </Container>
+        <Footer />
+      </ChakraProvider>
+      
     );
+
+    
+    
   }

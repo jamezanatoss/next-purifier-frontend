@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import styled from "styled-components";
 import Center from "@/components/Center";
 import Button from "@/components/Button";
@@ -10,6 +11,7 @@ import Table from "@/components/Table";
 import Input from "@/components/Input";
 import { RevealWrapper } from "next-reveal";
 import { useSession } from "next-auth/react";
+
 
 const ColumnsWrapper = styled.div`
   display: grid;
@@ -162,6 +164,7 @@ export default function CartPage() {
     const price = products.find(p => p._id === productId)?.price || 0;
     productsTotal += price;
   }
+  
 
   if (isSuccess) {
     return (
@@ -286,6 +289,7 @@ export default function CartPage() {
           )}
         </ColumnsWrapper>
       </Center>
+      <Footer />
     </>
   );
 }

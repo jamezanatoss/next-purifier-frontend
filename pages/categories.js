@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Center from "@/components/Center";
+import Footer from "@/components/Footer";
 import {Category} from "@/models/Category";
 import {Product} from "@/models/Product";
 import ProductBox from "@/components/ProductBox";
@@ -76,6 +77,7 @@ export default function CategoriesPage({mainCategories,categoriesProducts,wished
           </CategoryWrapper>
         ))}
       </Center>
+      <Footer />
     </>
   );
 }

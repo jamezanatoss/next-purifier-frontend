@@ -1,10 +1,10 @@
 import React from 'react'
 import { useState } from 'react'
+import ProductAll from "@/components/Neoplus/PriceAll";
 
 export default function Neoplus(product) {
   // console.log(product.price);
   let p = [];
-  console.log()
   p = product.product;
 
   //Pure Gold G01-UVC

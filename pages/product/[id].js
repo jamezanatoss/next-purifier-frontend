@@ -1,5 +1,7 @@
+import React, { useState } from 'react';
 import Center from "@/components/Center";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import Title from "@/components/Title";
 import { mongooseConnect } from "@/lib/mongoose";
 import { Product } from "@/models/Product";
@@ -9,6 +11,7 @@ import ProductImages from "@/components/ProductImages";
 import CartIcon from "@/components/icons/CartIcon";
 import FlyingButton from "@/components/FlyingButton";
 import Neoplus from "@/components/Neoplus/Neoplus";
+import PriceAll from "@/components/Neoplus/PriceAll";
 //import ProductReviews from "@/components/ProductReviews";
 
 const ColWrapper = styled.div`
@@ -28,21 +31,18 @@ const PriceRow = styled.div`
 const Price = styled.span`
   font-size: 1.4rem;
 `;
-const Card = styled.div`
-
-`;
 
 
 export default function ProductPage({ product }) {
-  let priceArray = []
-  if(product.price == 39800){
-    priceArray[0] = 690;
-    priceArray[1] = 790;
-    priceArray[2] = 39800;  
-  }
+  // let priceArray = []
+  // if(product.price == 39800){
+  //   priceArray[0] = 690;
+  //   priceArray[1] = 790;
+  //   priceArray[2] = 39800;  
+  // }
 
-  console.log(priceArray)
-  
+  // console.log(priceArray)
+
   return (
     <>
       <Header />
@@ -57,19 +57,14 @@ export default function ProductPage({ product }) {
             <p>ตัวเลือกบริการ</p>
             <p>{product.description}</p>
             <PriceRow>
-              <div>
-                <Price>{priceArray[0]}&nbsp;บาท</Price><br />
-                <Price>{priceArray[1]}&nbsp;บาท</Price><br />
-                <Price>{priceArray[2]}&nbsp;บาท</Price><br />
+              {/* <div>
+                {<Price>{product.price}&nbsp;บาท</Price>}
+              </div> */}
+             <div>
+                {<PriceAll product={product._id} price={product.price}>&nbsp;บาท</PriceAll>}
               </div>
               <div>
-                <FlyingButton main _id={product._id} >
-                  <CartIcon />รถเข็น
-                </FlyingButton>
-                <FlyingButton main _id={product._id}>
-                  <CartIcon />รถเข็น
-                </FlyingButton>
-                <FlyingButton main _id={product._id} >
+                <FlyingButton main _id={product._id} price={product.price}>
                   <CartIcon />รถเข็น
                 </FlyingButton>
               </div>
@@ -82,6 +77,7 @@ export default function ProductPage({ product }) {
         <Neoplus product={product._id} price={product.price} title={product.title} />
         {/* <ProductReviews product={product} /> */}
       </Center>
+      <Footer />
 
     </>
 

@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import styled from "styled-components";
 import Center from "@/components/Center";
+import Footer from "@/components/Footer";
 import {mongooseConnect} from "@/lib/mongoose";
 import {Product} from "@/models/Product";
 import ProductsGrid from "@/components/ProductsGrid";
@@ -17,6 +18,7 @@ export default function ProductsPage({products,wishedProducts}) {
         <Title>สินค้าทั้งหมด</Title>
         <ProductsGrid products={products} wishedProducts={wishedProducts} />
       </Center>
+      <Footer />
     </>
   );
 }
