@@ -34,14 +34,10 @@ const Price = styled.span`
 
 
 export default function ProductPage({ product }) {
-  // let priceArray = []
-  // if(product.price == 39800){
-  //   priceArray[0] = 690;
-  //   priceArray[1] = 790;
-  //   priceArray[2] = 39800;  
-  // }
 
-  // console.log(priceArray)
+  console.log(product.price)
+  let prices = product.price
+  const [selectedItems, setSelectedItems] = useState([]);
 
   return (
     <>
@@ -60,18 +56,28 @@ export default function ProductPage({ product }) {
               {/* <div>
                 {<Price>{product.price}&nbsp;บาท</Price>}
               </div> */}
-             <div>
-                {<PriceAll product={product._id} price={product.price}>&nbsp;บาท</PriceAll>}
-              </div>
               <div>
-                <FlyingButton main _id={product._id} price={product.price}>
+                {/* <PriceAll product={product._id} price={product.price}>&nbsp;บาท</PriceAll> */}
+                <FlyingButton main _id={product._id} price={prices}>
                   <CartIcon />รถเข็น
                 </FlyingButton>
+
+              </div>
+              <div>
+
+                {/* <FlyingButton main _id={product._id} price={product.price}>
+                  <CartIcon />รถเข็น
+              </FlyingButton> */}
+                {/* <FlyingButton main _id={product._id} price={product.price[1]}>
+                  <CartIcon />รถเข็น
+              </FlyingButton>
+              <FlyingButton main _id={product._id} price={product.price[2]}>
+                  <CartIcon />รถเข็น
+              </FlyingButton> */}
+
               </div>
             </PriceRow>
           </div>
-
-
 
         </ColWrapper>
         <Neoplus product={product._id} price={product.price} title={product.title} />

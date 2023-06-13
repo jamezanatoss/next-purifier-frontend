@@ -1,8 +1,10 @@
 import styled from "styled-components";
-import {ButtonStyle} from "@/components/Button";
-import {primary} from "@/lib/colors";
-import {CartContext} from "@/components/CartContext";
-import {useContext, useEffect, useRef, useState} from "react";
+import { ButtonStyle } from "@/components/Button";
+import { primary } from "@/lib/colors";
+import { CartContext } from "@/components/CartContext";
+import { useContext, useEffect, useRef, useState } from "react";
+import PriceAll from "./Neoplus/PriceAll";
+
 
 const FlyingButtonWrapper = styled.div`
   button{
@@ -43,17 +45,101 @@ const FlyingButtonWrapper = styled.div`
   }
 `;
 
+const cardContainerStyles = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center'
+};
+
+const cardStyles = {
+  backgroundColor: 'white',
+  border: '1px solid black',
+  borderRadius: '4px',
+  padding: '10px',
+  marginBottom: '10px',
+  width: '200px',
+  textAlign: 'center',
+  cursor: 'pointer',
+  color: 'black'
+};
+
+const selectedCardStyles = {
+  ...cardStyles,
+  border: '2px solid blue',
+  backgroundColor: 'white',
+  color: 'black'
+};
+
+const titleStyles = {
+  fontSize: '18px',
+  marginTop: '0'
+};
+
+const priceStyles = {
+  marginBottom: '0'
+};
+
+export const cards = [];
+
 export default function FlyingButton(props) {
-  const {addProduct} = useContext(CartContext);
+  const [selectedCardIndex, setSelectedCardIndex] = useState(-1);
+  let { addProduct } = useContext(CartContext)
   const imgRef = useRef();
+
   function sendImageToCart(ev) {
     imgRef.current.style.display = 'inline-block';
-    imgRef.current.style.left = (ev.clientX-50) + 'px';
-    imgRef.current.style.top = (ev.clientY-50) + 'px';
+    imgRef.current.style.left = (ev.clientX - 50) + 'px';
+    imgRef.current.style.top = (ev.clientY - 50) + 'px';
     // setTimeout(() => {
     //   imgRef.current.style.display = 'none';
     // }, 1000);
   }
+
+  //console.log(ArrayPrice)
+  let i = 0;
+
+  // if (ArrayPrice == '64572cc0c00f1970b94d1858') {
+
+  //   for (i = 0; i < props.price.length; i++) {
+  //     cards = props.price[i]
+  //     console.log(cards)
+  //   }
+  //   //console.log(cards)
+  // }
+
+  let pricess = 0;
+  const cardss = [];
+  let prices = props.price;
+
+  if (props._id == '64572cc0c00f1970b94d1858') {
+
+    for (i = 0; i < prices.length; i++) {
+      cardss[i] = [
+        { id: i, price: prices[i] },
+      ];
+    }
+    
+  }
+  var count = 0;
+  const handleCardClick = (price) => {
+    setSelectedCardIndex(price);
+    count = setSelectedCardIndex(price);
+    console.log("count",count);
+  };
+  
+
+  addProduct = (id, index) => {
+    
+    let ArrayPrice = index.length;
+    // console.log("cards", ArrayPrice)
+    if (id == '64572cc0c00f1970b94d1858') {
+      
+      const selectedPrice = index[handleCardClick];
+      cards.push({ ...props, pricess: selectedPrice });
+      console.log("cards", selectedPrice)
+    }
+  }
+
   useEffect(() => {
     const interval = setInterval(() => {
       const reveal = imgRef.current?.closest('div[data-sr-id]');
@@ -67,13 +153,32 @@ export default function FlyingButton(props) {
   }, []);
   return (
     <>
-      <FlyingButtonWrapper
-        white={props.white}
-        main={props.main}
-        onClick={() => addProduct(props._id)}>
-        <img src={props.src} alt="" ref={imgRef} />
-        <button onClick={ev => sendImageToCart(ev)} {...props} />
-      </FlyingButtonWrapper>
+
+      <div style={cardContainerStyles}>
+        {cardss.map((card, index) => (
+          <div
+            key={card.id}
+            style={selectedCardIndex === index ? selectedCardStyles : cardStyles}
+            onClick={() => handleCardClick(index)}
+          >
+            <h3 style={titleStyles}>Card </h3>
+            <p style={priceStyles}>Price: </p>
+          </div>
+
+        ))
+        }
+
+        <FlyingButtonWrapper
+          white={props.white}
+          main={props.main}
+          onClick={() => addProduct(props._id, props.price)}>
+          <img src={props.src} alt="" ref={imgRef} />
+          <button onClick={ev => sendImageToCart(ev)} {...props} />
+        </FlyingButtonWrapper>
+
+      </div>
+
+
     </>
   );
 }

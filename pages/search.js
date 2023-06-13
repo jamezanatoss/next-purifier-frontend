@@ -56,7 +56,7 @@ export default function SearchPage() {
             placeholder="ค้นหาสินค้า..." />
         </InputWrapper>
         {!isLoading && phrase !== '' && products.length === 0 && (
-          <h2>No products found for query "{phrase}"</h2>
+          <h2>ไม่มีสินค้านี้ "{phrase}"</h2>
         )}
         {isLoading && (
           <Spinner fullWidth={true} />

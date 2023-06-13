@@ -16,9 +16,9 @@ export function CartContextProvider({children}) {
       setCartProducts(JSON.parse(ls.getItem('cart')));
     }
   }, []);
-  function addProduct(productId) {
+  function addProduct(productId,productPrice) {
     setCartProducts(prev => [...prev,productId]);
-    
+    // console.log(productId)
   }
   function removeProduct(productId) {
     setCartProducts(prev => {

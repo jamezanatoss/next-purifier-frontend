@@ -9,6 +9,7 @@ import FlyingButton from "@/components/FlyingButton";
 import HeartOutlineIcon from "@/components/icons/HeartOutlineIcon";
 import HeartSolidIcon from "@/components/icons/HeartSolidIcon";
 import axios from "axios";
+import PriceAll from "@/components/Neoplus/PriceAll";
 
 const ProductWrapper = styled.div`
   button{
@@ -88,6 +89,7 @@ const WishlistButton = styled.button`
   }
 `;
 
+
 export default function ProductBox({
   _id,title,description,price,images,wished=false,
   onRemoveFromWishlist=()=>{},
@@ -106,6 +108,8 @@ export default function ProductBox({
     }).then(() => {});
     setIsWished(nextValue);
   }
+
+  console.log(price);
   return (
     <ProductWrapper>
       <WhiteBox href={url}>
@@ -119,10 +123,10 @@ export default function ProductBox({
       <ProductInfoBox>
         <Title href={url}>{title}</Title>
         <PriceRow>
-          <Price>
+          <PriceAll>
             {price}&nbsp;บาท
-          </Price>
-          <FlyingButton _id={_id} src={images?.[0]}>รถเข็น</FlyingButton>
+          </PriceAll>
+          {/* <FlyingButton _id={_id} src={images?.[0]}>รถเข็น</FlyingButton> */}
         </PriceRow>
       </ProductInfoBox>
     </ProductWrapper>

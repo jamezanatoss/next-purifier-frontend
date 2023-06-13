@@ -11,6 +11,7 @@ import Table from "@/components/Table";
 import Input from "@/components/Input";
 import { RevealWrapper } from "next-reveal";
 import { useSession } from "next-auth/react";
+import PriceAll from "@/components/Neoplus/PriceAll";
 
 
 const ColumnsWrapper = styled.div`
@@ -109,6 +110,7 @@ export default function CartPage() {
   const [country, setCountry] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const [shippingFee, setShippingFee] = useState(null);
+  const [selectedCardIndex] = useState('')
   useEffect(() => {
     if (cartProducts.length > 0) {
       axios.post('/api/cart', { ids: cartProducts })
@@ -160,11 +162,21 @@ export default function CartPage() {
     }
   }
   let productsTotal = 0;
+  let i = 0;
+  let price = 0;
+
   for (const productId of cartProducts) {
-    const price = products.find(p => p._id === productId)?.price || 0;
-    productsTotal += price;
+    // const prices = products.find(p => p._id === productId)?.price || 0;
+    // for (i = 0; i < prices.length; i++) {
+      price = products.find(p => p._id === productId)?.price || 0;
+      productsTotal += price;
+      console.log(price)
+    // }
+    //console.log(price)
   }
-  
+
+
+
 
   if (isSuccess) {
     return (
@@ -220,7 +232,9 @@ export default function CartPage() {
                             onClick={() => moreOfThisProduct(product._id)}>+</Button>
                         </td>
                         <td>
+
                           {cartProducts.filter(id => id === product._id).length * product.price}&nbsp;บาท
+
                         </td>
                       </tr>
                     ))}
@@ -278,8 +292,8 @@ export default function CartPage() {
                   name="country"
                   onChange={ev => setCountry(ev.target.value)} />
                 <input type="checkbox" id="" name="" value=""></input>ฉันยอมรับ&nbsp;
-                <a class="" href="/" style={{textDecoration: "none",color:"#007FFF"}}>ข้อตกลงและเงื่อนไข</a>&nbsp;และ&nbsp;
-                <a class="" href="/" style={{textDecoration: "none",color:"#007FFF"}}>นโยบายความเป็นส่วนตัว</a>
+                <a class="" href="/" style={{ textDecoration: "none", color: "#007FFF" }}>ข้อตกลงและเงื่อนไข</a>&nbsp;และ&nbsp;
+                <a class="" href="/" style={{ textDecoration: "none", color: "#007FFF" }}>นโยบายความเป็นส่วนตัว</a>
                 <Button black block
                   onClick={goToPayment}>
                   ชำระเงิน
