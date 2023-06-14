@@ -12,7 +12,7 @@ import Input from "@/components/Input";
 import { RevealWrapper } from "next-reveal";
 import { useSession } from "next-auth/react";
 import PriceAll from "@/components/Neoplus/PriceAll";
-
+import { count } from "@/components/FlyingButton";
 
 const ColumnsWrapper = styled.div`
   display: grid;
@@ -120,7 +120,9 @@ export default function CartPage() {
     } else {
       setProducts([]);
     }
-  }, [cartProducts]);
+    console.log("cartProducts", cartProducts.length);
+  }
+    , [cartProducts]);
   useEffect(() => {
     if (typeof window === 'undefined') {
       return;
@@ -166,11 +168,16 @@ export default function CartPage() {
   let price = 0;
 
   for (const productId of cartProducts) {
+    //console.log("products",products)
     // const prices = products.find(p => p._id === productId)?.price || 0;
     // for (i = 0; i < prices.length; i++) {
-      price = products.find(p => p._id === productId)?.price || 0;
+    price = products.find(p => p._id === productId)?.price[count] || 0;
+    if (products._id === productId || price != price[count]) {
+      price = products.find(p => p._id === productId)?.price[count] || 0;
+    }
       productsTotal += price;
-      console.log(price)
+    
+    //console.log("productsTotal",productsTotal)
     // }
     //console.log(price)
   }
@@ -232,9 +239,7 @@ export default function CartPage() {
                             onClick={() => moreOfThisProduct(product._id)}>+</Button>
                         </td>
                         <td>
-
-                          {cartProducts.filter(id => id === product._id).length * product.price}&nbsp;บาท
-
+                          {cartProducts.filter(id => id === product._id).length * product.price[count]}&nbsp;บาท
                         </td>
                       </tr>
                     ))}

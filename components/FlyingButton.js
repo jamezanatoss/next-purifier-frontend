@@ -45,6 +45,7 @@ const FlyingButtonWrapper = styled.div`
   }
 `;
 
+
 const cardContainerStyles = {
   display: 'flex',
   flexDirection: 'column',
@@ -79,11 +80,13 @@ const priceStyles = {
   marginBottom: '0'
 };
 
+export var count = 0;
+
 export const cards = [];
 
 export default function FlyingButton(props) {
   const [selectedCardIndex, setSelectedCardIndex] = useState(-1);
-  let { addProduct } = useContext(CartContext)
+  const { addProduct } = useContext(CartContext)
   const imgRef = useRef();
 
   function sendImageToCart(ev) {
@@ -97,21 +100,13 @@ export default function FlyingButton(props) {
 
   //console.log(ArrayPrice)
   let i = 0;
-
-  // if (ArrayPrice == '64572cc0c00f1970b94d1858') {
-
-  //   for (i = 0; i < props.price.length; i++) {
-  //     cards = props.price[i]
-  //     console.log(cards)
-  //   }
-  //   //console.log(cards)
-  // }
+  
 
   let pricess = 0;
   const cardss = [];
   let prices = props.price;
 
-  if (props._id == '64572cc0c00f1970b94d1858') {
+  if (props._id) {
 
     for (i = 0; i < prices.length; i++) {
       cardss[i] = [
@@ -120,25 +115,34 @@ export default function FlyingButton(props) {
     }
     
   }
-  var count = 0;
-  const handleCardClick = (price) => {
-    setSelectedCardIndex(price);
-    count = setSelectedCardIndex(price);
-    console.log("count",count);
-  };
-  
 
-  addProduct = (id, index) => {
+  // if (props._id == '64844b83fa492481e9aa6a62') {
+
+  //   for (i = 0; i < prices.length; i++) {
+  //     cardss[i] = [
+  //       { id: i, price: prices[i] },
+  //     ];
+  //   }
     
-    let ArrayPrice = index.length;
-    // console.log("cards", ArrayPrice)
-    if (id == '64572cc0c00f1970b94d1858') {
-      
-      const selectedPrice = index[handleCardClick];
-      cards.push({ ...props, pricess: selectedPrice });
-      console.log("cards", selectedPrice)
-    }
-  }
+  // }
+
+  const handleCardClick = (price) => {
+    count = price;
+    setSelectedCardIndex(price);
+    console.log("count",count);
+  
+};
+
+  // addProduct = (id, index) => {
+    
+  //   if (id == '64572cc0c00f1970b94d1858') {
+  //     const selectedPrice = index[count];
+  //     //console.log("cards1", cards)
+  //     cards.push({ ...props, pricess: selectedPrice });
+  //     console.log("cards2", addProduct)
+  //     //return addProduct == cards;
+  //   }
+  // }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -151,6 +155,9 @@ export default function FlyingButton(props) {
 
     return () => clearInterval(interval);
   }, []);
+
+  console.log("count",count);
+
   return (
     <>
 
@@ -171,7 +178,7 @@ export default function FlyingButton(props) {
         <FlyingButtonWrapper
           white={props.white}
           main={props.main}
-          onClick={() => addProduct(props._id, props.price)}>
+          onClick={() => addProduct(props._id,props.price)}>
           <img src={props.src} alt="" ref={imgRef} />
           <button onClick={ev => sendImageToCart(ev)} {...props} />
         </FlyingButtonWrapper>
@@ -181,4 +188,5 @@ export default function FlyingButton(props) {
 
     </>
   );
+  
 }
