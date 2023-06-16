@@ -1,4 +1,5 @@
 import {createContext, useEffect, useState} from "react";
+import mongoose from "mongoose";
 
 export const CartContext = createContext({});
 
@@ -16,19 +17,26 @@ export function CartContextProvider({children}) {
       setCartProducts(JSON.parse(ls.getItem('cart')));
     }
   }, []);
-  function addProduct(productId,productPrice) {
-    setCartProducts(prev => [...prev,productId]);
-    // console.log(productId)
+
+  function addProduct(productId, productPrice) {
+    console.log("productId",productId);
+    console.log("productPrice",productPrice);
+    const newItem = {
+      //_id: mongoose.Types.ObjectId(),
+      productId: productId, 
+      price: productPrice,
+    };
+    console.log("newItem",newItem)
+    setCartProducts(prev => [...prev, newItem]);
   }
-  function removeProduct(productId) {
+
+  function removeProduct(productId, productPrice) {
     setCartProducts(prev => {
-      const pos = prev.indexOf(productId);
-      if (pos !== -1) {
-        return prev.filter((value,index) => index !== pos);
-      }
-      return prev;
+      return prev.filter(item => item.productId !== productId || item.productPrice !== productPrice);
     });
   }
+
+  
   function clearCart() {
     setCartProducts([]);
   }

@@ -109,7 +109,7 @@ export default function ProductBox({
     setIsWished(nextValue);
   }
 
-  console.log(price);
+  //console.log(price);
   return (
     <ProductWrapper>
       <WhiteBox href={url}>

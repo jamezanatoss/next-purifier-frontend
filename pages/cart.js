@@ -11,8 +11,6 @@ import Table from "@/components/Table";
 import Input from "@/components/Input";
 import { RevealWrapper } from "next-reveal";
 import { useSession } from "next-auth/react";
-import PriceAll from "@/components/Neoplus/PriceAll";
-import { count } from "@/components/FlyingButton";
 
 const ColumnsWrapper = styled.div`
   display: grid;
@@ -110,19 +108,22 @@ export default function CartPage() {
   const [country, setCountry] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const [shippingFee, setShippingFee] = useState(null);
-  const [selectedCardIndex] = useState('')
+  const [cartProductss, setCartProductss] = useState([]);
   useEffect(() => {
     if (cartProducts.length > 0) {
       axios.post('/api/cart', { ids: cartProducts })
         .then(response => {
-          setProducts(response.data);
-        })
+          const updatedProducts = response.data.map(product => ({
+            ...product,
+            count: cartProducts.find(item => item.productId === product._id)?.count || 0
+          }));
+          setProducts(updatedProducts);
+        });
     } else {
       setProducts([]);
     }
-    console.log("cartProducts", cartProducts.length);
-  }
-    , [cartProducts]);
+  }, [cartProducts]);
+
   useEffect(() => {
     if (typeof window === 'undefined') {
       return;
@@ -148,11 +149,13 @@ export default function CartPage() {
       setCountry(response.data.country);
     });
   }, [session]);
-  function moreOfThisProduct(id) {
-    addProduct(id);
+  function moreOfThisProduct(productId, productPrice) {
+    addProduct(productId, productPrice);
   }
-  function lessOfThisProduct(id) {
-    removeProduct(id);
+
+  function lessOfThisProduct(productId, productPrice) {
+    //const objectIdProductId = mongoose.Types.ObjectId(productId.productId);  // Use the productId property from the object
+    removeProduct(productId, productPrice);
   }
   async function goToPayment() {
     const response = await axios.post('/api/checkout', {
@@ -163,27 +166,16 @@ export default function CartPage() {
       window.location = response.data.url;
     }
   }
+
   let productsTotal = 0;
-  let i = 0;
-  let price = 0;
 
-  for (const productId of cartProducts) {
-    //console.log("products",products)
-    // const prices = products.find(p => p._id === productId)?.price || 0;
-    // for (i = 0; i < prices.length; i++) {
-    price = products.find(p => p._id === productId)?.price[count] || 0;
-    if (products._id === productId || price != price[count]) {
-      price = products.find(p => p._id === productId)?.price[count] || 0;
+  for (const product of cartProducts) {
+    const matchedProduct = products.find((p) => p._id === product.productId);
+    if (matchedProduct) {
+      const price = matchedProduct.price[product.count]; // Use `product.count` instead of `count`
+      productsTotal += price * product.count;
     }
-      productsTotal += price;
-    
-    //console.log("productsTotal",productsTotal)
-    // }
-    //console.log(price)
   }
-
-
-
 
   if (isSuccess) {
     return (
@@ -221,8 +213,9 @@ export default function CartPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {products.map(product => (
-                      <tr>
+
+                    {products.map((product) => (
+                      <tr key={product._id}>
                         <ProductInfoCell>
                           <ProductImageBox>
                             <img src={product.images[0]} alt="" />
@@ -230,16 +223,26 @@ export default function CartPage() {
                           {product.title}
                         </ProductInfoCell>
                         <td>
-                          <Button
-                            onClick={() => lessOfThisProduct(product._id)}>-</Button>
-                          <QuantityLabel>
-                            {cartProducts.filter(id => id === product._id).length}
-                          </QuantityLabel>
-                          <Button
-                            onClick={() => moreOfThisProduct(product._id)}>+</Button>
+                          {cartProducts
+                            .filter((item) => item.productId.toString() === product._id.toString())
+                            .map((item) => (
+                              <div key={`${product._id}-${item.price}`}>
+                                <Button onClick={() => lessOfThisProduct(product._id.toString(), item.price)}>
+                                  -
+                                </Button>
+                                <QuantityLabel>{item.count}</QuantityLabel>
+                                <Button onClick={() => moreOfThisProduct(product._id.toString(), item.price)}>
+                                  +
+                                </Button>
+                                &nbsp;({item.price}&nbsp;บาท)
+                              </div>
+                            ))}
                         </td>
                         <td>
-                          {cartProducts.filter(id => id === product._id).length * product.price[count]}&nbsp;บาท
+                          {cartProducts
+                            .filter((item) => item.productId === product._id)
+                            .reduce((total, item) => total + item.count * item.price, 0)}
+                          &nbsp;บาท
                         </td>
                       </tr>
                     ))}

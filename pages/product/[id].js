@@ -35,7 +35,7 @@ const Price = styled.span`
 
 export default function ProductPage({ product }) {
 
-  console.log(product.price)
+  //console.log(product.price)
   let prices = product.price
   const [selectedItems, setSelectedItems] = useState([]);
 
@@ -64,17 +64,6 @@ export default function ProductPage({ product }) {
 
               </div>
               <div>
-
-                {/* <FlyingButton main _id={product._id} price={product.price}>
-                  <CartIcon />รถเข็น
-              </FlyingButton> */}
-                {/* <FlyingButton main _id={product._id} price={product.price[1]}>
-                  <CartIcon />รถเข็น
-              </FlyingButton>
-              <FlyingButton main _id={product._id} price={product.price[2]}>
-                  <CartIcon />รถเข็น
-              </FlyingButton> */}
-
               </div>
             </PriceRow>
           </div>

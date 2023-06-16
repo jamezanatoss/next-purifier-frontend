@@ -80,69 +80,27 @@ const priceStyles = {
   marginBottom: '0'
 };
 
-export var count = 0;
-
-export const cards = [];
 
 export default function FlyingButton(props) {
   const [selectedCardIndex, setSelectedCardIndex] = useState(-1);
-  const { addProduct } = useContext(CartContext)
+  const [selectedPrice, setSelectedPrice] = useState(0);
+  const { addProduct } = useContext(CartContext);
   const imgRef = useRef();
 
   function sendImageToCart(ev) {
     imgRef.current.style.display = 'inline-block';
     imgRef.current.style.left = (ev.clientX - 50) + 'px';
     imgRef.current.style.top = (ev.clientY - 50) + 'px';
-    // setTimeout(() => {
-    //   imgRef.current.style.display = 'none';
-    // }, 1000);
   }
 
-  //console.log(ArrayPrice)
-  let i = 0;
-  
-
-  let pricess = 0;
-  const cardss = [];
-  let prices = props.price;
-
-  if (props._id) {
-
-    for (i = 0; i < prices.length; i++) {
-      cardss[i] = [
-        { id: i, price: prices[i] },
-      ];
-    }
-    
-  }
-
-  // if (props._id == '64844b83fa492481e9aa6a62') {
-
-  //   for (i = 0; i < prices.length; i++) {
-  //     cardss[i] = [
-  //       { id: i, price: prices[i] },
-  //     ];
-  //   }
-    
-  // }
-
-  const handleCardClick = (price) => {
-    count = price;
+  function handleCardClick(price) {
     setSelectedCardIndex(price);
-    console.log("count",count);
-  
-};
+    setSelectedPrice(cardss[price][0].price);
+  }
 
-  // addProduct = (id, index) => {
-    
-  //   if (id == '64572cc0c00f1970b94d1858') {
-  //     const selectedPrice = index[count];
-  //     //console.log("cards1", cards)
-  //     cards.push({ ...props, pricess: selectedPrice });
-  //     console.log("cards2", addProduct)
-  //     //return addProduct == cards;
-  //   }
-  // }
+  function addToCart() {
+    addProduct(props._id, selectedPrice);
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -156,11 +114,21 @@ export default function FlyingButton(props) {
     return () => clearInterval(interval);
   }, []);
 
-  console.log("count",count);
+  let i = 0;
+  let pricess = 0;
+  const cardss = [];
+  let prices = props.price;
+
+  if (props._id) {
+    for (i = 0; i < prices.length; i++) {
+      cardss[i] = [
+        { id: i, price: prices[i] },
+      ];
+    }
+  }
 
   return (
     <>
-
       <div style={cardContainerStyles}>
         {cardss.map((card, index) => (
           <div
@@ -169,24 +137,18 @@ export default function FlyingButton(props) {
             onClick={() => handleCardClick(index)}
           >
             <h3 style={titleStyles}>Card </h3>
-            <p style={priceStyles}>Price: </p>
+            <p style={priceStyles}>Price: {card[0].price} </p>
           </div>
-
-        ))
-        }
-
-        <FlyingButtonWrapper
-          white={props.white}
-          main={props.main}
-          onClick={() => addProduct(props._id,props.price)}>
+        ))}
+        <FlyingButtonWrapper white={props.white} main={props.main}>
           <img src={props.src} alt="" ref={imgRef} />
           <button onClick={ev => sendImageToCart(ev)} {...props} />
         </FlyingButtonWrapper>
-
+        <button onClick={addToCart}>รถเข็น</button>
       </div>
-
-
     </>
   );
-  
 }
+
+
+
