@@ -59,7 +59,7 @@ export default function ProductPage({ product }) {
               <div>
                 {/* <PriceAll product={product._id} price={product.price}>&nbsp;บาท</PriceAll> */}
                 <FlyingButton main _id={product._id} price={prices}>
-                  <CartIcon />รถเข็น
+                  {/* <CartIcon />รถเข็น */}
                 </FlyingButton>
 
               </div>

@@ -12,6 +12,8 @@ import Input from "@/components/Input";
 import { RevealWrapper } from "next-reveal";
 import { useSession } from "next-auth/react";
 
+import mongoose from "mongoose";
+
 const ColumnsWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
@@ -109,14 +111,17 @@ export default function CartPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [shippingFee, setShippingFee] = useState(null);
   const [cartProductss, setCartProductss] = useState([]);
+
   useEffect(() => {
     if (cartProducts.length > 0) {
       axios.post('/api/cart', { ids: cartProducts })
         .then(response => {
-          const updatedProducts = response.data.map(product => ({
-            ...product,
-            count: cartProducts.find(item => item.productId === product._id)?.count || 0
-          }));
+          const updatedProducts = response.data.map(product => {
+            return {
+              ...product,
+              count: cartProducts.find(item => item.productId === product._id)?.count || 0
+            };
+          });
           setProducts(updatedProducts);
         });
     } else {
@@ -149,14 +154,15 @@ export default function CartPage() {
       setCountry(response.data.country);
     });
   }, [session]);
+
   function moreOfThisProduct(productId, productPrice) {
     addProduct(productId, productPrice);
   }
 
   function lessOfThisProduct(productId, productPrice) {
-    //const objectIdProductId = mongoose.Types.ObjectId(productId.productId);  // Use the productId property from the object
     removeProduct(productId, productPrice);
   }
+
   async function goToPayment() {
     const response = await axios.post('/api/checkout', {
       name, email, city, postalCode, streetAddress, country,
@@ -214,38 +220,46 @@ export default function CartPage() {
                   </thead>
                   <tbody>
 
-                    {products.map((product) => (
-                      <tr key={product._id}>
-                        <ProductInfoCell>
-                          <ProductImageBox>
-                            <img src={product.images[0]} alt="" />
-                          </ProductImageBox>
-                          {product.title}
-                        </ProductInfoCell>
-                        <td>
-                          {cartProducts
-                            .filter((item) => item.productId.toString() === product._id.toString())
-                            .map((item) => (
-                              <div key={`${product._id}-${item.price}`}>
-                                <Button onClick={() => lessOfThisProduct(product._id.toString(), item.price)}>
-                                  -
-                                </Button>
-                                <QuantityLabel>{item.count}</QuantityLabel>
-                                <Button onClick={() => moreOfThisProduct(product._id.toString(), item.price)}>
-                                  +
-                                </Button>
-                                &nbsp;({item.price}&nbsp;บาท)
-                              </div>
-                            ))}
-                        </td>
-                        <td>
-                          {cartProducts
-                            .filter((item) => item.productId === product._id)
-                            .reduce((total, item) => total + item.count * item.price, 0)}
-                          &nbsp;บาท
-                        </td>
-                      </tr>
-                    ))}
+                    {
+                      products.map((product) => (
+                        <tr key={product._id}>
+                          <ProductInfoCell>
+                            <ProductImageBox>
+                              <img src={product.images[0]} alt="" />
+                            </ProductImageBox>
+                            {product.title}
+                          </ProductInfoCell>
+                          <td>
+                            {cartProducts
+                              .filter((item) => item.productId.toString() === product._id.toString())
+                              .map((item) => {
+                                console.log("count",item); // Log the item object
+                                return (
+                                  <div key={`${product._id}-${item.price}`}>
+                                    <Button onClick={() => lessOfThisProduct(product._id.toString(), item.price)}>
+                                      -
+                                    </Button>
+                                    <QuantityLabel>{item.count}</QuantityLabel>
+                                    <Button onClick={() => moreOfThisProduct(product._id.toString(), item.price)}>
+                                      +
+                                    </Button>
+                                    &nbsp;({item.price}&nbsp;บาท)
+                                  </div>
+                                );
+                              })}
+                          </td>
+                         
+                          <td>
+                            {cartProducts
+                              .filter((item) => item.productId.toString() === product._id.toString())
+                              .reduce((total, item) => total + item.count * item.price, 0)
+                              }
+                            &nbsp;บาท
+                            
+                          </td>
+                        </tr>
+                      ))
+                    }
                     <tr className="subtotal">
                       <td colSpan={2}>ราคาสินค้า</td>
                       <td>{productsTotal}&nbsp;บาท</td>

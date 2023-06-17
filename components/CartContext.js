@@ -22,17 +22,16 @@ export function CartContextProvider({children}) {
     console.log("productId",productId);
     console.log("productPrice",productPrice);
     const newItem = {
-      //_id: mongoose.Types.ObjectId(),
       productId: productId, 
       price: productPrice,
     };
-    console.log("newItem",newItem)
+    console.log("newItem", typeof newItem)
     setCartProducts(prev => [...prev, newItem]);
   }
 
   function removeProduct(productId, productPrice) {
     setCartProducts(prev => {
-      return prev.filter(item => item.productId !== productId || item.productPrice !== productPrice);
+      return prev.filter(item => item.productId !== productId || item.price !== productPrice);
     });
   }
 
