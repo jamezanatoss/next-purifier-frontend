@@ -156,12 +156,33 @@ export default function CartPage() {
   }, [session]);
 
   function moreOfThisProduct(productId, productPrice) {
-    addProduct(productId, productPrice);
+    const updatedCartProducts = [...cartProducts];
+    const existingProductIndex = updatedCartProducts.findIndex(
+      item => item.productId === productId && item.price === productPrice
+    );
+
+    if (existingProductIndex !== -1) {
+      updatedCartProducts[existingProductIndex].count += 1; // Increment the quantity of the existing product
+      setCartProductss(updatedCartProducts);
+    }
+  }
+  function lessOfThisProduct(productId, productPrice) {
+    const updatedCartProducts = [...cartProducts];
+    const existingProductIndex = updatedCartProducts.findIndex(
+      item => item.productId === productId && item.price === productPrice
+    );
+
+    if (existingProductIndex !== -1) {
+      const existingProduct = updatedCartProducts[existingProductIndex];
+      if (existingProduct.count === 1) {
+        updatedCartProducts.splice(existingProductIndex, 1); // Remove the product if the quantity is 1
+      } else {
+        existingProduct.count -= 1; // Decrement the quantity of the existing product
+      }
+      setCartProductss(updatedCartProducts);
+    }
   }
 
-  function lessOfThisProduct(productId, productPrice) {
-    removeProduct(productId, productPrice);
-  }
 
   async function goToPayment() {
     const response = await axios.post('/api/checkout', {
@@ -173,21 +194,15 @@ export default function CartPage() {
     }
   }
 
-  let productsTotal = 0;
-
-  for (const product of cartProducts) {
-    const matchedProduct = products.find((p) => p._id === product.productId);
-    if (matchedProduct) {
-      const price = matchedProduct.price[product.count - 1];
-      console.log("Product:", matchedProduct.title);
-      console.log("Product Price:", price);
-      console.log("Product Count:", product.count);
-      const subtotal = price * product.count;
-      console.log("Subtotal:", subtotal);
-      productsTotal += subtotal;
+  const productsTotal = cartProducts.reduce((total, item) => {
+    const product = products.find((p) => p._id === item.productId);
+    if (product) {
+      const price = product.price[item.count - 1];
+      return total + price * item.count;
     }
-  }
-  
+    return total;
+  }, 0);
+
   console.log("Total:", productsTotal);
 
   if (isSuccess) {
@@ -228,53 +243,35 @@ export default function CartPage() {
                   <tbody>
 
                     {
-                      products.map((product) => (
-                        <tr key={product._id}>
-                          <ProductInfoCell>
-                            <ProductImageBox>
-                              <img src={product.images[0]} alt="" />
-                            </ProductImageBox>
-                            {product.title}
-                          </ProductInfoCell>
-                          <td>
-                            {cartProducts
-                              .filter((item) => item.productId.toString() === product._id.toString())
-                              .map((item) => {
-                                console.log("count", item); // Log the item object
-                                return (
-                                  <div key={`${product._id}-${item.price}`}>
-                                    <Button onClick={() => lessOfThisProduct(product._id.toString(), item.price)}>
-                                      -
-                                    </Button>
-                                    <QuantityLabel>{item.count}</QuantityLabel>
-                                    <Button onClick={() => moreOfThisProduct(product._id.toString(), item.price)}>
-                                      +
-                                    </Button>
-                                  </div>
-                                );
-                              })}
-                          </td>
+                      cartProducts.map((item) => {
+                        const product = products.find((p) => p._id === item.productId);
 
-                          <td>
-                            {cartProducts
-                              .filter((item) => item.productId.toString() === product._id.toString())
-                              .map((item) => {
-                                console.log("count", item); // Log the item object
-                                return (
-                                  <div key={`${product._id}-${item.price}`}>
-                                    &nbsp;{item.price}&nbsp;บาท
-                                  </div>
-                                );
-                              })}
-                            {/* {cartProducts
-                              .filter((item) => item.productId.toString() === product._id.toString())
-                              .reduce((total, item) => total + item.count * item.price, 0)
-                              }
-                            &nbsp;บาท */}
-
-                          </td>
-                        </tr>
-                      ))
+                        if (product) {
+                          return (
+                            <tr key={item.productId}>
+                              <ProductInfoCell>
+                                <ProductImageBox>
+                                  <img src={product.images[0]} alt="" />
+                                </ProductImageBox>
+                                {product.title}
+                              </ProductInfoCell>
+                              <td>
+                                <div>
+                                  <Button onClick={() => lessOfThisProduct(item.productId, item.price)}>
+                                    -
+                                  </Button>
+                                  <QuantityLabel>{item.count}</QuantityLabel>
+                                  <Button onClick={() => moreOfThisProduct(item.productId, item.price)}>
+                                    +
+                                  </Button>
+                                </div>
+                              </td>
+                              <td>{item.price}&nbsp;บาท</td>
+                            </tr>
+                          );
+                        }
+                        return null;
+                      })
                     }
                     <tr className="subtotal">
                       <td colSpan={2}>ราคาสินค้า</td>
