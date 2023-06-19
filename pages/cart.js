@@ -178,10 +178,17 @@ export default function CartPage() {
   for (const product of cartProducts) {
     const matchedProduct = products.find((p) => p._id === product.productId);
     if (matchedProduct) {
-      const price = matchedProduct.price[product.count]; // Use `product.count` instead of `count`
-      productsTotal += price * product.count;
+      const price = matchedProduct.price[product.count - 1];
+      console.log("Product:", matchedProduct.title);
+      console.log("Product Price:", price);
+      console.log("Product Count:", product.count);
+      const subtotal = price * product.count;
+      console.log("Subtotal:", subtotal);
+      productsTotal += subtotal;
     }
   }
+  
+  console.log("Total:", productsTotal);
 
   if (isSuccess) {
     return (
@@ -233,7 +240,7 @@ export default function CartPage() {
                             {cartProducts
                               .filter((item) => item.productId.toString() === product._id.toString())
                               .map((item) => {
-                                console.log("count",item); // Log the item object
+                                console.log("count", item); // Log the item object
                                 return (
                                   <div key={`${product._id}-${item.price}`}>
                                     <Button onClick={() => lessOfThisProduct(product._id.toString(), item.price)}>
@@ -243,19 +250,28 @@ export default function CartPage() {
                                     <Button onClick={() => moreOfThisProduct(product._id.toString(), item.price)}>
                                       +
                                     </Button>
-                                    &nbsp;({item.price}&nbsp;บาท)
                                   </div>
                                 );
                               })}
                           </td>
-                         
+
                           <td>
                             {cartProducts
                               .filter((item) => item.productId.toString() === product._id.toString())
+                              .map((item) => {
+                                console.log("count", item); // Log the item object
+                                return (
+                                  <div key={`${product._id}-${item.price}`}>
+                                    &nbsp;{item.price}&nbsp;บาท
+                                  </div>
+                                );
+                              })}
+                            {/* {cartProducts
+                              .filter((item) => item.productId.toString() === product._id.toString())
                               .reduce((total, item) => total + item.count * item.price, 0)
                               }
-                            &nbsp;บาท
-                            
+                            &nbsp;บาท */}
+
                           </td>
                         </tr>
                       ))
