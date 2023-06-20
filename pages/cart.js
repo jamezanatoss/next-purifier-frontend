@@ -99,7 +99,7 @@ const a = styled.a`
 `;
 
 export default function CartPage() {
-  const { cartProducts, addProduct, removeProduct, clearCart } = useContext(CartContext);
+  const { addProduct, removeProduct, clearCart } = useContext(CartContext);
   const { data: session } = useSession();
   const [products, setProducts] = useState([]);
   const [name, setName] = useState('');
@@ -110,7 +110,7 @@ export default function CartPage() {
   const [country, setCountry] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const [shippingFee, setShippingFee] = useState(null);
-  const [cartProductss, setCartProductss] = useState([]);
+  const {cartProducts, setCartProducts} = useContext(CartContext);
 
   useEffect(() => {
     if (cartProducts.length > 0) {
@@ -160,35 +160,48 @@ export default function CartPage() {
     const existingProductIndex = updatedCartProducts.findIndex(
       item => item.productId === productId && item.price === productPrice
     );
-
+  
     if (existingProductIndex !== -1) {
       updatedCartProducts[existingProductIndex].count += 1; // Increment the quantity of the existing product
-      setCartProductss(updatedCartProducts);
+    } else {
+      // Product doesn't exist in the cart, so add it
+      const newItem = {
+        productId: productId,
+        price: productPrice,
+        count: 1, // Set the initial count to 1
+      };
+      updatedCartProducts.push(newItem);
     }
+  
+    setCartProducts(updatedCartProducts); // Corrected setCartProducts function name
   }
+  
   function lessOfThisProduct(productId, productPrice) {
     const updatedCartProducts = [...cartProducts];
     const existingProductIndex = updatedCartProducts.findIndex(
       item => item.productId === productId && item.price === productPrice
     );
-
+  
     if (existingProductIndex !== -1) {
       const existingProduct = updatedCartProducts[existingProductIndex];
       if (existingProduct.count === 1) {
-        updatedCartProducts.splice(existingProductIndex, 1); // Remove the product if the quantity is 1
+        // Remove the product if the quantity is 1
+        updatedCartProducts.splice(existingProductIndex, 1);
       } else {
-        existingProduct.count -= 1; // Decrement the quantity of the existing product
+        // Decrement the quantity of the existing product
+        existingProduct.count -= 1;
       }
-      setCartProductss(updatedCartProducts);
+      setCartProducts(updatedCartProducts); // Corrected setCartProducts function name
     }
   }
-
-
+  
+  
   async function goToPayment() {
     const response = await axios.post('/api/checkout', {
       name, email, city, postalCode, streetAddress, country,
       cartProducts,
     });
+    console.log("respone",response)
     if (response.data.url) {
       window.location = response.data.url;
     }
@@ -197,13 +210,13 @@ export default function CartPage() {
   const productsTotal = cartProducts.reduce((total, item) => {
     const product = products.find((p) => p._id === item.productId);
     if (product) {
-      const price = product.price[item.count - 1];
+      const price = item.price;
       return total + price * item.count;
     }
     return total;
   }, 0);
 
-  console.log("Total:", productsTotal);
+  //console.log("Total:", productsTotal);
 
   if (isSuccess) {
     return (
@@ -257,13 +270,13 @@ export default function CartPage() {
                               </ProductInfoCell>
                               <td>
                                 <div>
-                                  <Button onClick={() => lessOfThisProduct(item.productId, item.price)}>
-                                    -
-                                  </Button>
-                                  <QuantityLabel>{item.count}</QuantityLabel>
-                                  <Button onClick={() => moreOfThisProduct(item.productId, item.price)}>
-                                    +
-                                  </Button>
+                                <Button onClick={() => lessOfThisProduct(item.productId, item.price)}>-</Button>
+                                  <QuantityLabel>
+                                  {item.count}
+                                    {/* {console.log("itemcount",item.count)} */}
+                                  </QuantityLabel>
+                                  <Button onClick={() => moreOfThisProduct(item.productId, item.price)}>+</Button>
+
                                 </div>
                               </td>
                               <td>{item.price}&nbsp;บาท</td>

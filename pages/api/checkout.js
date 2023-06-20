@@ -17,7 +17,7 @@ export default async function handler(req,res) {
     cartProducts,
   } = req.body;
   await mongooseConnect();
-  const productsIds = cartProducts;
+  const productsIds = cartProducts.map(item => item.productId);
   const uniqueIds = [...new Set(productsIds)];
   const productsInfos = await Product.find({_id:uniqueIds});
 
@@ -29,7 +29,7 @@ export default async function handler(req,res) {
       line_items.push({
         quantity,
         price_data: {
-          currency: 'BAHT',
+          currency: 'THB',
           product_data: {name:productInfo.title},
           unit_amount: quantity * productInfo.price * 100,
         },
@@ -61,7 +61,7 @@ export default async function handler(req,res) {
         shipping_rate_data: {
           display_name: 'shipping fee',
           type: 'fixed_amount',
-          fixed_amount: {amount: shippingFeeCents, currency: 'BAHT'},
+          fixed_amount: {amount: shippingFeeCents, currency: 'THB'},
         },
       }
     ],

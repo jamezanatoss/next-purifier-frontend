@@ -79,6 +79,7 @@ const SideIcons = styled.div`
 export default function Header() {
   const {cartProducts} = useContext(CartContext);
  const [mobileNavActive,setMobileNavActive] = useState(false);
+ const { totalCount } = useContext(CartContext);
   return (
     <StyledHeader>
       <Center>
@@ -90,7 +91,7 @@ export default function Header() {
             <NavLink href={'/categories'}>สินค้า</NavLink>
             <NavLink href={'/account'}>แอคเคาท์</NavLink>
             <NavLink href={'/contact'}>ติดต่อ </NavLink>
-            <NavLink href={'/cart'}>รถเข็น ({cartProducts.length})</NavLink>
+            <NavLink href={'/cart'}>รถเข็น ({totalCount})</NavLink>
             
           </StyledNav>
          <SideIcons>
