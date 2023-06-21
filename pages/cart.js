@@ -201,11 +201,13 @@ export default function CartPage() {
       name, email, city, postalCode, streetAddress, country,
       cartProducts,
     });
-    console.log("respone",response)
+    //console.log("respone",response)
     if (response.data.url) {
       window.location = response.data.url;
     }
   }
+
+  //console.log("cartProducts",cartProducts)
 
   const productsTotal = cartProducts.reduce((total, item) => {
     const product = products.find((p) => p._id === item.productId);
