@@ -18,11 +18,15 @@ export default async function handler(req,res) {
     return;
   }
 
+  console.log("event",event)
+
   // Handle the event
   switch (event.type) {
     case 'checkout.session.completed':
       const data = event.data.object;
+      console.log("data",data)
       const orderId = data.metadata.orderId;
+      console.log("orderId",orderId)
       const paid = data.payment_status === 'paid';
       if (orderId && paid) {
         await Order.findByIdAndUpdate(orderId,{
@@ -41,5 +45,5 @@ export const config = {
   api: {bodyParser:false,}
 };
 
-// bright-thrift-cajole-lean
-// acct_1Lj5ADIUXXMmgk2a
+// goood-humane-exalt-valor
+// acct_1NL1DtKdh0z6pp4P
