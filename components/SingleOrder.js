@@ -24,7 +24,7 @@ const Address = styled.div`
   color:#888;
 `;
 
-export default function SingleOrder({line_items,createdAt,...rest}) {
+export default function SingleOrder({ line_items, createdAt, ...rest }) {
   return (
     <StyledOrder>
       <div>
@@ -37,12 +37,21 @@ export default function SingleOrder({line_items,createdAt,...rest}) {
         </Address>
       </div>
       <div>
-        {line_items.map(item => (
-          <ProductRow>
-            <span>{item.quantity} x </span>
-            {item.price_data.product_data.name}
-          </ProductRow>
-        ))}
+        {line_items && createdAt && rest.name && email && streetAddress && postalCode && city && country ? (
+          <SingleOrder
+            line_items={line_items}
+            createdAt={createdAt}
+            name={rest.name}
+            email={email}
+            streetAddress={streetAddress}
+            postalCode={postalCode}
+            city={city}
+            country={country}
+          />
+        ) : (
+          <p>Some required props are missing for rendering the order.</p>
+        )}
+
       </div>
     </StyledOrder>
   );

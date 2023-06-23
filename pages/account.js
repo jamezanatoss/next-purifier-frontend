@@ -102,7 +102,7 @@ export default function AccountPage() {
       '',
       'success'
     )
-}
+  }
   return (
     <>
       <Header />
@@ -112,12 +112,13 @@ export default function AccountPage() {
             <RevealWrapper delay={0}>
               <WhiteBox>
                 <Tabs
-                  tabs={['คำสั่งซื้อ','รายการโปรด']}
+                  tabs={['คำสั่งซื้อ', 'รายการโปรด']}
                   active={activeTab}
                   onChange={setActiveTab}
                 />
                 {activeTab === 'คำสั่งซื้อ' && (
                   <>
+                    {/* {console.log("activeTab", activeTab)} */}
                     {!orderLoaded && (
                       <Spinner fullWidth={true} />
                     )}
