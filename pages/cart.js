@@ -11,7 +11,7 @@ import Table from "@/components/Table";
 import Input from "@/components/Input";
 import { RevealWrapper } from "next-reveal";
 import { useSession } from "next-auth/react";
-
+import Swal from 'sweetalert2';
 import mongoose from "mongoose";
 
 const ColumnsWrapper = styled.div`
@@ -110,7 +110,7 @@ export default function CartPage() {
   const [country, setCountry] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const [shippingFee, setShippingFee] = useState(null);
-  const {cartProducts, setCartProducts} = useContext(CartContext);
+  const { cartProducts, setCartProducts } = useContext(CartContext);
 
   useEffect(() => {
     if (cartProducts.length > 0) {
@@ -160,7 +160,7 @@ export default function CartPage() {
     const existingProductIndex = updatedCartProducts.findIndex(
       item => item.productId === productId && item.price === productPrice
     );
-  
+
     if (existingProductIndex !== -1) {
       updatedCartProducts[existingProductIndex].count += 1; // Increment the quantity of the existing product
     } else {
@@ -172,16 +172,16 @@ export default function CartPage() {
       };
       updatedCartProducts.push(newItem);
     }
-  
+
     setCartProducts(updatedCartProducts); // Corrected setCartProducts function name
   }
-  
+
   function lessOfThisProduct(productId, productPrice) {
     const updatedCartProducts = [...cartProducts];
     const existingProductIndex = updatedCartProducts.findIndex(
       item => item.productId === productId && item.price === productPrice
     );
-  
+
     if (existingProductIndex !== -1) {
       const existingProduct = updatedCartProducts[existingProductIndex];
       if (existingProduct.count === 1) {
@@ -194,14 +194,31 @@ export default function CartPage() {
       setCartProducts(updatedCartProducts); // Corrected setCartProducts function name
     }
   }
-  
-  
+
+
   async function goToPayment() {
+    const checkbox = document.getElementById('checkboxId');
+
+    if (!checkbox.checked) {
+      Swal.fire({
+        title: 'Please tick the checkbox',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+
+      return;
+    }
+
     const response = await axios.post('/api/checkout', {
-      name, email, city, postalCode, streetAddress, country,
+      name,
+      email,
+      city,
+      postalCode,
+      streetAddress,
+      country,
       cartProducts,
     });
-    //console.log("respone",response)
+
     if (response.data.url) {
       window.location = response.data.url;
     }
@@ -227,8 +244,7 @@ export default function CartPage() {
         <Center>
           <ColumnsWrapper>
             <Box>
-              <h1>Thanks for your order!</h1>
-              <p>We will email you when your order will be sent.</p>
+              <h1>ขอบคุณสำหรับออเดอร์!</h1>
             </Box>
           </ColumnsWrapper>
         </Center>
@@ -272,9 +288,9 @@ export default function CartPage() {
                               </ProductInfoCell>
                               <td>
                                 <div>
-                                <Button onClick={() => lessOfThisProduct(item.productId, item.price)}>-</Button>
+                                  <Button onClick={() => lessOfThisProduct(item.productId, item.price)}>-</Button>
                                   <QuantityLabel>
-                                  {item.count}
+                                    {item.count}
                                     {/* {console.log("itemcount",item.count)} */}
                                   </QuantityLabel>
                                   <Button onClick={() => moreOfThisProduct(item.productId, item.price)}>+</Button>
@@ -314,11 +330,14 @@ export default function CartPage() {
                   value={name}
                   name="name"
                   onChange={ev => setName(ev.target.value)} />
-                <Input type="text"
+                <Input
+                  type="text"
                   placeholder="Email"
                   value={email}
                   name="email"
-                  onChange={ev => setEmail(ev.target.value)} />
+                  onChange={ev => setEmail(ev.target.value)}
+                  disabled={session} // Disable the input field if there is an active session
+                />
                 <CityHolder>
                   <Input type="text"
                     placeholder="City"
@@ -341,13 +360,23 @@ export default function CartPage() {
                   value={country}
                   name="country"
                   onChange={ev => setCountry(ev.target.value)} />
-                <input type="checkbox" id="" name="" value=""></input>ฉันยอมรับ&nbsp;
-                <a class="" href="/" style={{ textDecoration: "none", color: "#007FFF" }}>ข้อตกลงและเงื่อนไข</a>&nbsp;และ&nbsp;
-                <a class="" href="/" style={{ textDecoration: "none", color: "#007FFF" }}>นโยบายความเป็นส่วนตัว</a>
-                <Button black block
-                  onClick={goToPayment}>
+                <td>
+                  <input type="checkbox" id="checkboxId" name="checkboxName" value="" />
+                  <label htmlFor="checkboxId">ฉันยอมรับ</label>
+                  &nbsp;
+                  <a className="" href="/" style={{ textDecoration: 'none', color: '#007FFF' }}>
+                    ข้อตกลงและเงื่อนไข
+                  </a>
+                  &nbsp;และ&nbsp;
+                  <a className="" href="/" style={{ textDecoration: 'none', color: '#007FFF' }}>
+                    นโยบายความเป็นส่วนตัว
+                  </a>
+                </td>
+
+                <Button black block onClick={goToPayment}>
                   ชำระเงิน
                 </Button>
+
               </Box>
             </RevealWrapper>
           )}

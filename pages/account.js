@@ -85,6 +85,7 @@ export default function AccountPage() {
       setWishlistLoaded(true);
     });
     axios.get('/api/orders').then(response => {
+      console.log('Orders API response:', response);
       setOrders(response.data);
       setOrderLoaded(true);
     });
@@ -118,7 +119,7 @@ export default function AccountPage() {
                 />
                 {activeTab === 'คำสั่งซื้อ' && (
                   <>
-                    {/* {console.log("activeTab", activeTab)} */}
+                    {console.log("orders", orders)}
                     {!orderLoaded && (
                       <Spinner fullWidth={true} />
                     )}
