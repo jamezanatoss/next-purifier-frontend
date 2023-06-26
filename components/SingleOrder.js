@@ -7,56 +7,56 @@ const StyledOrder = styled.div`
   display: flex;
   gap: 20px;
   align-items: center;
-  time{
+  time {
     font-size: 1rem;
     color: #555;
   }
 `;
+
 const ProductRow = styled.div`
   span{
     color:#aaa;
   }
 `;
+
 const Address = styled.div`
-  font-size:.8rem;
-  line-height:1rem;
+  font-size: 0.8rem;
+  line-height: 1rem;
   margin-top: 5px;
-  color:#888;
+  color: #888;
 `;
 
-export default function SingleOrder({ line_items, createdAt, ...rest }) {
+export default function SingleOrder({ line_items, createdAt, name, email, streetAddress, postalCode, city, country,status}) {
   return (
     <StyledOrder>
       <div>
-        <time>{(new Date(createdAt)).toLocaleString('sv-SE')}</time>
+        <time>{new Date(createdAt).toLocaleString("sv-SE")}</time>
         <Address>
-          {rest.name}<br />
-          {rest.email}<br />
-          {rest.streetAddress}<br />
-          {rest.postalCode} {rest.city}, {rest.country}
+          {name}
+          <br />
+          {email}
+          <br />
+          {streetAddress}
+          <br />
+          {postalCode} {city}, {country}
         </Address>
       </div>
       <div>
-        {line_items && createdAt && rest.name && rest.email && rest.streetAddress && rest.status && rest.postalCode && rest.city && rest.country ? (
-          <SingleOrder
-            line_items={line_items}
-            createdAt={createdAt}
-            name={rest.name}
-            email={rest.email}
-            streetAddress={rest.streetAddress}
-            status={rest.status}
-            postalCode={rest.postalCode}
-            city={rest.city}
-            country={rest.country}
-          />
-        ) : (
-          <p>Some required props are missing for rendering the order.</p>
-        )}
-
+      {line_items.map(item => (
+          <ProductRow>
+            {console.log("item",line_items)}
+            <span>{item.quantity} x </span>
+            {item.price_data.product_data.name}    
+          </ProductRow>
+        ))
+        }
       </div>
+      สถานะ: {status}
     </StyledOrder>
+    
   );
 }
+
 
 // import styled from "styled-components";
 

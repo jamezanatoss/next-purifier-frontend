@@ -85,7 +85,7 @@ export default function AccountPage() {
       setWishlistLoaded(true);
     });
     axios.get('/api/orders').then(response => {
-      console.log('Orders API response:', response);
+      console.log('Orders API response:', response.data);
       setOrders(response.data);
       setOrderLoaded(true);
     });
@@ -182,7 +182,8 @@ export default function AccountPage() {
                       placeholder="Email"
                       value={email}
                       name="email"
-                      onChange={ev => setEmail(ev.target.value)} />
+                      onChange={ev => setEmail(ev.target.value)} 
+                      disabled={session}/>
                     <CityHolder>
                       <Input type="text"
                         placeholder="City"
