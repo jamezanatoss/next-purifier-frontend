@@ -15,6 +15,7 @@ import ProductBox from "@/components/ProductBox";
 import Tabs from "@/components/Tabs";
 import SingleOrder from "@/components/SingleOrder";
 import Footer from "@/components/Footer";
+import OrderList from "@/components/OrderList";
 
 const ColsWrapper = styled.div`
   display:grid;
@@ -44,13 +45,53 @@ export default function AccountPage() {
   const [city, setCity] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [streetAddress, setStreetAddress] = useState('');
-  const [country, setCountry] = useState('');
+  const [phone, setPhone] = useState('');
   const [addressLoaded, setAddressLoaded] = useState(true);
   const [wishlistLoaded, setWishlistLoaded] = useState(true);
   const [orderLoaded, setOrderLoaded] = useState(true);
   const [wishedProducts, setWishedProducts] = useState([]);
   const [activeTab, setActiveTab] = useState('Orders');
   const [orders, setOrders] = useState([]);
+
+  // const handleRemoveOrder = (orderId) => {
+  //   const updatedOrders = orders.filter((order) => order.id !== orderId);
+  //   console.log("updatedOrders",updatedOrders)
+  //   setOrders(updatedOrders);
+  // };
+
+  const handleRemoveOrder = (orderId) => {
+    Swal.fire({
+      title: 'คุณต้องการที่จะลบใช่หรือไม่?',
+      text: 'คุณต้องการที่จะลบออร์เดอร์นี้',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ใช่ ลบเลย!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch(`/api/orders/${orderId}`, {
+            method: 'DELETE',
+          });
+  
+          if (!response.ok) {
+            throw new Error('Failed to remove order');
+          }
+  
+          const updatedOrders = orders.filter((order) => order.id !== orderId);
+          setOrders(updatedOrders);
+          console.log('Remove order:', orderId);
+          Swal.fire('ลบแล้ว!', 'ลบสำเร็จ.', 'success');
+          window.location.reload();
+        } catch (error) {
+          console.error('Failed to remove order:', error);
+          Swal.fire('Error', 'ไม่สามารถลบได้.', 'error');
+        }
+      }
+    });
+  };
+  
 
   async function logout() {
     await signOut({
@@ -61,7 +102,7 @@ export default function AccountPage() {
     await signIn('google');
   }
   function saveAddress() {
-    const data = { name, email, city, streetAddress, postalCode, country };
+    const data = { name, email, city, streetAddress, postalCode, phone };
     axios.put('/api/address', data);
   }
   useEffect(() => {
@@ -77,7 +118,7 @@ export default function AccountPage() {
       setCity(response.data.city);
       setPostalCode(response.data.postalCode);
       setStreetAddress(response.data.streetAddress);
-      setCountry(response.data.country);
+      setPhone(response.data.phone);
       setAddressLoaded(true);
     });
     axios.get('/api/wishlist').then(response => {
@@ -85,7 +126,7 @@ export default function AccountPage() {
       setWishlistLoaded(true);
     });
     axios.get('/api/orders').then(response => {
-      console.log('Orders API response:', response.data);
+      //console.log('Orders API response:', response.data);
       setOrders(response.data);
       setOrderLoaded(true);
     });
@@ -119,18 +160,18 @@ export default function AccountPage() {
                 />
                 {activeTab === 'คำสั่งซื้อ' && (
                   <>
-                    {console.log("orders", orders)}
+                    {/* {console.log("orders", orders)} */}
                     {!orderLoaded && (
-                      <Spinner fullWidth={true} />
+                      <Spinner />
                     )}
                     {orderLoaded && (
                       <div>
                         {orders.length === 0 && (
                           <p>คุณยังไม่มีคำสั่งซื้อ</p>
                         )}
-                        {orders.length > 0 && orders.map(o => (
-                          <SingleOrder {...o} />
-                        ))}
+                        {orders.length > 0 && (
+                          <OrderList orders={orders}  onRemoveOrder={handleRemoveOrder}/>
+                        )}
                       </div>
                     )}
                   </>
@@ -202,10 +243,10 @@ export default function AccountPage() {
                       name="streetAddress"
                       onChange={ev => setStreetAddress(ev.target.value)} />
                     <Input type="text"
-                      placeholder="Country"
-                      value={country}
-                      name="country"
-                      onChange={ev => setCountry(ev.target.value)} />
+                      placeholder="Phone"
+                      value={phone}
+                      name="phone"
+                      onChange={ev => setPhone(ev.target.value)} />
                     <Button black block
                       onClick={fireSweetAlert}
                     >

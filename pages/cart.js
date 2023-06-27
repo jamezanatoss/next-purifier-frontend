@@ -107,7 +107,7 @@ export default function CartPage() {
   const [city, setCity] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [streetAddress, setStreetAddress] = useState('');
-  const [country, setCountry] = useState('');
+  const [phone, setPhone] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const [shippingFee, setShippingFee] = useState(null);
   const { cartProducts, setCartProducts } = useContext(CartContext);
@@ -151,7 +151,7 @@ export default function CartPage() {
       setCity(response.data.city);
       setPostalCode(response.data.postalCode);
       setStreetAddress(response.data.streetAddress);
-      setCountry(response.data.country);
+      setPhone(response.data.phone);
     });
   }, [session]);
 
@@ -215,7 +215,7 @@ export default function CartPage() {
       city,
       postalCode,
       streetAddress,
-      country,
+      phone,
       cartProducts,
     });
 
@@ -356,10 +356,10 @@ export default function CartPage() {
                   name="streetAddress"
                   onChange={ev => setStreetAddress(ev.target.value)} />
                 <Input type="text"
-                  placeholder="Country"
-                  value={country}
-                  name="country"
-                  onChange={ev => setCountry(ev.target.value)} />
+                  placeholder="Phone"
+                  value={phone}
+                  name="phone"
+                  onChange={ev => setPhone(ev.target.value)} />
                 <td>
                   <input type="checkbox" id="checkboxId" name="checkboxName" value="" />
                   <label htmlFor="checkboxId">ฉันยอมรับ</label>

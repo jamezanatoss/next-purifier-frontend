@@ -1,4 +1,5 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import React from "react";
 
 const StyledOrder = styled.div`
   margin: 10px 0;
@@ -11,7 +12,15 @@ const StyledOrder = styled.div`
     font-size: 1rem;
     color: #555;
   }
+  ${({ delivered }) =>
+  delivered &&
+  css`
+    .status {
+      color: green;
+    }
+  `}
 `;
+
 
 const ProductRow = styled.div`
   span{
@@ -26,10 +35,43 @@ const Address = styled.div`
   color: #888;
 `;
 
-export default function SingleOrder({ line_items, createdAt, name, email, streetAddress, postalCode, city, country,status}) {
+const RemoveButton = styled.button`
+  background-color: #ff0000;
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+`;
+
+export default function SingleOrder({ line_items, createdAt, name, email, streetAddress, postalCode, city, phone,status,onRemove}) {
+  let statusLabel;
+  let delivered = false;
+
+  if (status === 'waiting') {
+    statusLabel = 'รอชำระ';
+  } 
+
+  else if (status === 'delivery') {
+    statusLabel = 'กำลังจัดส่ง';
+  } 
+  else if (status === 'shipped'){
+    statusLabel = 'จัดส่งแล้ว';
+    delivered = true;
+  }
+    else {
+    statusLabel = status;
+  }
+
+  const handleRemoveOrder = () => {
+    onRemove();
+  };
+
   return (
-    <StyledOrder>
+    
+    <StyledOrder delivered={delivered}>
       <div>
+      
         <time>{new Date(createdAt).toLocaleString("sv-SE")}</time>
         <Address>
           {name}
@@ -38,20 +80,26 @@ export default function SingleOrder({ line_items, createdAt, name, email, street
           <br />
           {streetAddress}
           <br />
-          {postalCode} {city}, {country}
+          {postalCode} {city}, {phone}
         </Address>
       </div>
       <div>
       {line_items.map(item => (
-          <ProductRow>
-            {console.log("item",line_items)}
+          <ProductRow key={item.id}>
             <span>{item.quantity} x </span>
             {item.price_data.product_data.name}    
           </ProductRow>
         ))
         }
       </div>
-      สถานะ: {status}
+      <div>
+        {status === "waiting" ? (
+          <div>{statusLabel}
+          <RemoveButton onClick={handleRemoveOrder} >Remove</RemoveButton></div>
+        ) : (
+          <div>{statusLabel}</div>
+        )}
+      </div>
     </StyledOrder>
     
   );

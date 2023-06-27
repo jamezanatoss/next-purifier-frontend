@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   }
   const {
     name, email, city,
-    postalCode, streetAddress, country,
+    postalCode, streetAddress, phone,
     cartProducts,
   } = req.body;
   await mongooseConnect();
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
 
   const orderDoc = await Order.create({
     line_items, name, email, city, postalCode,
-    streetAddress, country, paid: false,
+    streetAddress, phone, paid: false,
     userEmail: session?.user?.email,
   });
 
