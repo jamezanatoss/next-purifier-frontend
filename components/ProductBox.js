@@ -22,7 +22,7 @@ const ProductWrapper = styled.div`
 const WhiteBox = styled(Link)`
   background-color: #fff;
   padding: 20px;
-  height: 120px;
+  height: 150px;
   text-align: center;
   display: flex;
   align-items: center;
@@ -31,7 +31,7 @@ const WhiteBox = styled(Link)`
   position: relative;
   img{
     max-width: 100%;
-    max-height: 120px;
+    max-height: 100%;
   }
 `;
 

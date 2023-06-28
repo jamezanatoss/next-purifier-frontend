@@ -95,7 +95,7 @@ export default function FlyingButton(props) {
 
   function handleCardClick(price) {
     setSelectedCardIndex(price);
-    setSelectedPrice(cardss[price][0].price);
+    setSelectedPrice(cardss[price].price);
   }
 
   function addToCart() {
@@ -120,10 +120,8 @@ export default function FlyingButton(props) {
   let prices = props.price;
 
   if (props._id) {
-    for (i = 0; i < prices.length; i++) {
-      cardss[i] = [
-        { id: i, price: prices[i] },
-      ];
+    for (let j = 1; j <= prices.length; j++) {
+      cardss.push({ id: j, price: prices[j - 1] });
     }
   }
 
@@ -132,19 +130,20 @@ export default function FlyingButton(props) {
       <div style={cardContainerStyles}>
         {cardss.map((card, index) => (
           <div
-            key={card.id}
-            style={selectedCardIndex === index ? selectedCardStyles : cardStyles}
-            onClick={() => handleCardClick(index)}
-          >
-            <h3 style={titleStyles}>Card </h3>
-            <p style={priceStyles}>Price: {card[0].price} </p>
-          </div>
+          key={card.id}
+          style={selectedCardIndex === card.id - 1 ? selectedCardStyles : cardStyles}
+          onClick={() => handleCardClick(card.id - 1)}
+        >
+          <h3 style={titleStyles}>ราคาสำหรับสัญญา {card.id} ปี </h3>
+          <p style={priceStyles}>ราคา: {card.price} บาท</p>
+        </div>
         ))}
         <FlyingButtonWrapper white={props.white} main={props.main}>
           <img src={props.src} alt="" ref={imgRef} />
-          <button onClick={ev => sendImageToCart(ev)} {...props} />
+          {/* <button onClick={ev => sendImageToCart(ev)} {...props} /> */}
+          <button onClick={addToCart}>รถเข็น</button>
         </FlyingButtonWrapper>
-        <button onClick={addToCart}>รถเข็น</button>
+        
       </div>
     </>
   );
