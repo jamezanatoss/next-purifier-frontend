@@ -9,15 +9,7 @@ const endpointSecret = "whsec_1a25ab059c336f2ffa464fad4e7e33a604183b61f28888956f
 export default async function handler(req,res) {
   await mongooseConnect();
   const sig = req.headers['stripe-signature'];
-  // const nodemailer = require('nodemailer');
-  // const transporter = nodemailer.createTransport({
-  //   service: 'gmail',
-  //   auth: {
-  //     user: 'jamezandjuy@gmail.com',
-  //     pass: 'jamezandjuy01',
-  //   },
-  // });
-
+  
   let event;
 
   try {
@@ -34,6 +26,7 @@ export default async function handler(req,res) {
     case 'checkout.session.completed':
       const data = event.data.object;
       const orderId = data.metadata.orderId;
+      const lineitem = data.metadata.line_items;
       const paid = data.payment_status === 'paid';
       if (orderId && paid) {
         await Order.findByIdAndUpdate(orderId,{
@@ -49,7 +42,7 @@ export default async function handler(req,res) {
           from: 'jamezandjuy@gmail.com',
           to: customerEmail,
           subject: 'ชำระเงินสำเร็จ',
-          text: 'เลขออเดอร์ ' + orderId + 'ขอบคุณสำหรับออเดอร์ !',
+          text: 'เลขออเดอร์ ' + orderId + ' ขอบคุณสำหรับออเดอร์ !' ,
         };
 
         transporter.sendMail(mailOptions, (error, info) => {

@@ -3,7 +3,7 @@ import SingleOrder from "./SingleOrder";
 
 export default function OrderList({ orders, onRemoveOrder }) {
     const handleRemoveOrder = (orderId) => {
-        console.log("orderID",orderId)
+        //console.log("orderID",orderId)
         onRemoveOrder(orderId);
     };
 
@@ -13,6 +13,7 @@ export default function OrderList({ orders, onRemoveOrder }) {
                 return (
                     <SingleOrder
                         key={order._id}
+                        _id={order._id}
                         line_items={order.line_items}
                         createdAt={order.createdAt}
                         name={order.name}
