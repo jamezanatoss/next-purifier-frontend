@@ -8,23 +8,45 @@ const StyledOrder = styled.div`
   display: flex;
   gap: 20px;
   align-items: center;
+
   time {
     font-size: 1rem;
     color: #555;
   }
+
+  .status-wrapper {
+    width: 80px;
+  }
+
+  .status {
+    /* Default color for status */
+    color: red;
+  }
+
+  .status.delivery {
+    color: black;
+  }
+
+  .status.shipped {
+    color: blue;
+  }
+
+  .status.installed {
+    color: green;
+  }
+
   ${({ delivered }) =>
-  delivered &&
-  css`
-    .status {
-      color: green;
-    }
-  `}
+    delivered &&
+    css`
+      .status {
+        color: green;
+      }
+    `}
 `;
 
-
 const ProductRow = styled.div`
-  span{
-    color:#aaa;
+  span {
+    color: #aaa;
   }
 `;
 
@@ -44,16 +66,31 @@ const RemoveButton = styled.button`
   border-radius: 5px;
 `;
 
-export default function SingleOrder({_id, line_items, createdAt, name, email, streetAddress, postalCode, city, phone, status, onRemove}) {
+export default function SingleOrder({
+  _id,
+  line_items,
+  createdAt,
+  name,
+  email,
+  streetAddress,
+  postalCode,
+  city,
+  phone,
+  status,
+  onRemove,
+}) {
   let statusLabel;
   let delivered = false;
 
-  if (status === 'waiting') {
-    statusLabel = 'รอชำระ';
-  } else if (status === 'delivery') {
-    statusLabel = 'กำลังจัดส่ง';
-  } else if (status === 'shipped') {
-    statusLabel = 'จัดส่งแล้ว';
+  if (status === "waiting") {
+    statusLabel = "รอชำระ";
+  } else if (status === "delivery") {
+    statusLabel = "กำลังจัดส่ง";
+  } else if (status === "shipped") {
+    statusLabel = "จัดส่งแล้ว";
+    delivered = true;
+  } else if (status === "installed") {
+    statusLabel = "ติดตั้งแล้ว";
     delivered = true;
   } else {
     statusLabel = status;
@@ -66,9 +103,8 @@ export default function SingleOrder({_id, line_items, createdAt, name, email, st
   return (
     <StyledOrder delivered={delivered}>
       <div>
-        <time>{new Date(createdAt).toLocaleString('sv-SE')}</time>
+        <time>{new Date(createdAt).toLocaleString("sv-SE")}</time>
         <Address>
-  
           ID:{_id}
           <br />
           {name}
@@ -81,7 +117,7 @@ export default function SingleOrder({_id, line_items, createdAt, name, email, st
         </Address>
       </div>
       <div>
-        {line_items.map(item => (
+        {line_items.map((item) => (
           <ProductRow key={item.id}>
             <span>{item.quantity} x </span>
             {item.price_data.product_data.name}
@@ -89,17 +125,17 @@ export default function SingleOrder({_id, line_items, createdAt, name, email, st
         ))}
       </div>
       <div>
-        {status === 'waiting' ? (
-          <div>
-            {statusLabel}
+        {status === "waiting" ? (
+          <div className="status-wrapper">
+            <span className="status">{statusLabel}</span>
             <RemoveButton onClick={handleRemoveOrder}>Remove</RemoveButton>
           </div>
         ) : (
-          <div>{statusLabel}</div>
+          <div className="status-wrapper">
+            <span className={`status ${status}`}>{statusLabel}</span>
+          </div>
         )}
       </div>
     </StyledOrder>
   );
 }
-
-

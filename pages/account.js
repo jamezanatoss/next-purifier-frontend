@@ -83,7 +83,9 @@ export default function AccountPage() {
           setOrders(updatedOrders);
           console.log('Remove order:', orderId);
           Swal.fire('ลบแล้ว!', 'ลบสำเร็จ.', 'success');
-          window.location.reload();
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         } catch (error) {
           console.error('Failed to remove order:', error);
           Swal.fire('Error', 'ไม่สามารถลบได้.', 'error');

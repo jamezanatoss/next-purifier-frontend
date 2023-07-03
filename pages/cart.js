@@ -12,7 +12,6 @@ import Input from "@/components/Input";
 import { RevealWrapper } from "next-reveal";
 import { useSession } from "next-auth/react";
 import Swal from 'sweetalert2';
-import mongoose from "mongoose";
 
 const ColumnsWrapper = styled.div`
   display: grid;
@@ -141,6 +140,8 @@ export default function CartPage() {
       setShippingFee(res.data.value);
     })
   }, []);
+
+  
   useEffect(() => {
     if (!session) {
       return;
@@ -201,7 +202,7 @@ export default function CartPage() {
 
     if (!checkbox.checked) {
       Swal.fire({
-        title: 'Please tick the checkbox',
+        title: 'กรุณากดยอมรับก่อน',
         icon: 'error',
         confirmButtonText: 'OK',
       });
@@ -221,6 +222,7 @@ export default function CartPage() {
 
     if (response.data.url) {
       window.location = response.data.url;
+      clearCart();
     }
   }
 
