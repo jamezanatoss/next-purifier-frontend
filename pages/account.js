@@ -16,6 +16,8 @@ import Tabs from "@/components/Tabs";
 import SingleOrder from "@/components/SingleOrder";
 import Footer from "@/components/Footer";
 import OrderList from "@/components/OrderList";
+import Link from 'next/link';
+
 
 
 const ColsWrapper = styled.div`
@@ -70,11 +72,11 @@ export default function AccountPage() {
           const response = await fetch(`/api/orders/${orderId}`, {
             method: 'DELETE',
           });
-  
+
           if (!response.ok) {
             throw new Error('Failed to remove order');
           }
-  
+
           const updatedOrders = orders.filter((order) => order.id !== orderId);
           setOrders(updatedOrders);
           console.log('Remove order:', orderId);
@@ -89,7 +91,7 @@ export default function AccountPage() {
       }
     });
   };
-  
+
 
   async function logout() {
     await signOut({
@@ -118,23 +120,34 @@ export default function AccountPage() {
     setWishlistLoaded(false);
     setOrderLoaded(false);
 
-    axios.get('/api/address').then(response => {
-      if (response.status === 200) {
-        setName(response.data.name);
-        setEmail(response.data.email);
-        setCity(response.data.city);
-        setPostalCode(response.data.postalCode);
-        setStreetAddress(response.data.streetAddress);
-        setPhone(response.data.phone);
-        setAddressLoaded(true);
-      } else {
+    axios
+      .get('/api/address')
+      .then(response => {
+        if (response.status === 200) {
+          setName(response.data.name);
+          setEmail(response.data.email);
+          setCity(response.data.city);
+          setPostalCode(response.data.postalCode);
+          setStreetAddress(response.data.streetAddress);
+          setPhone(response.data.phone);
+          setAddressLoaded(true);
+        } else {
+          Swal.fire({
+            title: 'กรุณาใส่ข้อมูล address ให้ครบ',
+            icon: 'error',
+            confirmButtonText: 'OK',
+          });
+        }
+      })
+      .catch(error => {
         Swal.fire({
-          title: 'กรุณาใส่ข้อมูล address ให้ครบ',
+          title: 'User ใหม่ กรุณากรอกข้อมูล address',
+          text: error.message, // Display the error message from the caught error
           icon: 'error',
           confirmButtonText: 'OK',
         });
-      }
-    });
+      });
+
 
     axios.get('/api/wishlist').then(response => {
       setWishedProducts(response.data.map(wp => wp.product));
@@ -185,7 +198,7 @@ export default function AccountPage() {
                           <p>คุณยังไม่มีคำสั่งซื้อ</p>
                         )}
                         {orders.length > 0 && (
-                          <OrderList orders={orders}  onRemoveOrder={handleRemoveOrder}/>
+                          <OrderList orders={orders} onRemoveOrder={handleRemoveOrder} />
                         )}
                       </div>
                     )}
@@ -224,7 +237,7 @@ export default function AccountPage() {
             <RevealWrapper delay={100}>
               <WhiteBox>
                 <h2>{session ? 'ข้อมูลผู้ใช้งาน' : 'เข้าสู่ระบบ'}</h2>
-                
+
                 {session && (
                   <>
                     <Input type="text"
@@ -236,8 +249,8 @@ export default function AccountPage() {
                       placeholder="Email"
                       value={email}
                       name="email"
-                      onChange={ev => setEmail(ev.target.value)} 
-                      disabled={session}/>
+                      onChange={ev => setEmail(ev.target.value)}
+                      disabled={session} />
                     <CityHolder>
                       <Input type="text"
                         placeholder="City"
@@ -272,7 +285,9 @@ export default function AccountPage() {
                   <Button primary onClick={logout}>ออกจากระบบ</Button>
                 )}
                 {!session && (
-                  <Button primary onClick={login}>เข้าสู่ระบบ</Button>
+                  <Link href="/login">
+                    <Button primary> เข้าสู่ระบบ</Button>
+                  </Link>
                 )}
               </WhiteBox>
             </RevealWrapper>

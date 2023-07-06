@@ -13,6 +13,7 @@ import { RevealWrapper } from "next-reveal";
 import { useSession } from "next-auth/react";
 import Swal from 'sweetalert2';
 
+
 const ColumnsWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
@@ -141,7 +142,7 @@ export default function CartPage() {
     })
   }, []);
 
-  
+
   useEffect(() => {
     if (!session) {
       return;
@@ -153,6 +154,13 @@ export default function CartPage() {
       setPostalCode(response.data.postalCode);
       setStreetAddress(response.data.streetAddress);
       setPhone(response.data.phone);
+    }).catch(error => {
+      Swal.fire({
+        title: 'User ใหม่ กรุณากรอกข้อมูล address ที่หน้าแอคเคาท์',
+        text: error.message, // Display the error message from the caught error
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
     });
   }, [session]);
 

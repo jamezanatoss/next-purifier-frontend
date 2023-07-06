@@ -1,11 +1,11 @@
-import {mongooseConnect} from "@/lib/mongoose";
-import {getServerSession} from "next-auth";
-import {authOptions} from "@/pages/api/auth/[...nextauth]";
-import {Address} from "@/models/Address";
+import { mongooseConnect } from "@/lib/mongoose";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { Address } from "@/models/Address";
 
 export default async function handle(req, res) {
   await mongooseConnect();
-  const session  = await getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions);
 
   if (!session) {
     // Handle the case when the session is null
@@ -15,21 +15,29 @@ export default async function handle(req, res) {
 
   const { user } = session;
 
-  if (req.method === 'PUT') {
-    const address = await Address.findOne({ userEmail: user.email });
-    if (address) {
-      res.json(await Address.findByIdAndUpdate(address._id, req.body));
-    } else {
-      res.json(await Address.create({ userEmail: user.email, ...req.body }));
+  try {
+    if (req.method === 'PUT') {
+      const address = await Address.findOne({ userEmail: user.email });
+      if (address) {
+        res.json(await Address.findByIdAndUpdate(address._id, req.body));
+      } else {
+        res.json(await Address.create({ userEmail: user.email, ...req.body }));
+      }
     }
-  }
 
-  if (req.method === 'GET') {
-    const address = await Address.findOne({ userEmail: user.email });
-    if (address) {
-      res.json(address);
+    if (req.method === 'GET') {
+      const address = await Address.findOne({ userEmail: user.email });
+      if (address) {
+        res.json(address);
+      } else {
+        res.status(404).json({ error: 'No address found for the user' });
+      }
+    }
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      res.status(404).json({ error: 'Resource not found' });
     } else {
-      res.status(404).json({ error: 'No address found for the user' });
+      res.status(500).json({ error: 'Internal server error' });
     }
   }
 }

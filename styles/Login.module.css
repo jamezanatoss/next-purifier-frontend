@@ -5,7 +5,7 @@
     min-height: 100vh;
   }
   
-  .registerSection {
+  .loginSection {
     width: 75%;
     padding: 4rem;
     background-color: #f7fafc;
@@ -38,13 +38,13 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; /* Add this line to center the form group */
     margin-bottom: 1rem;
   }
   
   .input {
     width: 100%;
-    max-width: 300px;
+    max-width: 300px; /* Adjust the maximum width as needed */
     padding: 1rem 1.5rem;
     background-color: #f7fafc;
     border: 1px solid #cbd5e1;
@@ -52,12 +52,13 @@
     outline: none;
   }
   
+  
   .error {
     color: #ff0000;
     margin-top: 0.5rem;
   }
   
-  .registerButton {
+  .loginButton {
     width: 100%;
     padding: 0.75rem;
     background-color: #6b7280;
@@ -94,7 +95,7 @@
   
   .signupLink {
     color: #3b82f6;
-    text-decoration: none; /* Remove the underline */
+    text-decoration: underline;
     cursor: pointer;
   }
   

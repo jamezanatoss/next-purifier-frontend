@@ -1,125 +1,148 @@
-import Head from 'next/head'
-import Layout from '../layout/layout'
-import Link from 'next/link'
-import styles from '../styles/Form.module.css';
-import Image from 'next/image'
-import { HiAtSymbol, HiFingerPrint, HiOutlineUser } from "react-icons/hi";
+import Head from 'next/head';
+import Layout from '../layout/layout';
+import Link from 'next/link';
+import Swal from 'sweetalert2';
 import { useState } from 'react';
 import { useFormik } from 'formik';
-import { registerValidate } from '../lib/validate'
+import { registerValidate } from '../lib/validate';
+import styles from '../styles/Form.module.css';
 import { useRouter } from 'next/router';
 
-export default function Register(){
+export default function Register() {
+    const router = useRouter();
+    const [show, setShow] = useState({ password: false, cpassword: false });
 
-    const [show, setShow] = useState({ password: false, cpassword: false })
-    const router = useRouter()
     const formik = useFormik({
         initialValues: {
-            username : '',
+            username: '',
             email: '',
             password: '',
             cpassword: ''
         },
         validate: registerValidate,
-        onSubmit
-    })
+        onSubmit: onSubmit
+    });
 
-    async function onSubmit(values){
+    async function onSubmit(values) {
         const options = {
-            method: "POST",
-            headers : { 'Content-Type': 'application/json'},
-            body: JSON.stringify(values)
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(values),
+        };
+      
+        const response = await fetch('http://localhost:3029/api/auth/signup', options);
+        const data = await response.json();
+      
+        if (response.ok) {
+          Swal.fire({
+            title: 'Success',
+            text: 'Register สำเร็จ.',
+            icon: 'success',
+            confirmButtonText: 'OK',
+          }).then(() => {
+            router.push('/login');
+          });
+        } else if (response.status === 422 && data.error === 'User Already Exists...!') {
+          Swal.fire({
+            title: 'Error',
+            text: 'Email นี้มีผู้ใช้ไปแล้ว',
+            icon: 'error',
+            confirmButtonText: 'OK',
+          });
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: 'Email นี้มีผู้ใช้ไปแล้ว',
+            icon: 'error',
+            confirmButtonText: 'OK',
+          });
         }
-
-        await fetch('http://localhost:3029/api/auth/signup', options)
-            .then(res => res.json())
-            .then((data) => {
-                if(data) router.push('http://localhost:3029')
-            })
-    }
+      }
+      
 
     return (
         <Layout>
+            <Head>
+                <title>Register</title>
+            </Head>
 
-        <Head>
-            <title>Register</title>
-        </Head>
+            <section className={styles.container}>
+                <div className={styles.registerSection}>
+                    <div className={styles.title}>
+                        <h1 className={styles.heading}>Register</h1>
+                        <p className={styles.subheading}>เครื่องกรองน้ำ Purifier</p>
+                    </div>
 
-        <section className='w-3/4 mx-auto flex flex-col gap-10'>
-            <div className="title">
-                <h1 className='text-gray-800 text-4xl font-bold py-4'>Register</h1>
-                <p className='w-3/4 mx-auto text-gray-400'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores, officia?</p>
-            </div>
+                    {/* form */}
+                    <form className={styles.form} onSubmit={formik.handleSubmit}>
+                        <div className={`${styles.formGroup} ${formik.errors.username && formik.touched.username ? styles.error : ''}`}>
+                            <input
+                                type="text"
+                                name="username"
+                                placeholder="Username"
+                                className={styles.input}
+                                {...formik.getFieldProps('username')}
+                            />
 
-            {/* form */}
-            <form className='flex flex-col gap-5' onSubmit={formik.handleSubmit}>
-                <div className={`${styles.input_group} ${formik.errors.username && formik.touched.username ? 'border-rose-600' : ''}`}>
-                    <input 
-                    type="text"
-                    name='Username'
-                    placeholder='Username'
-                    className={styles.input_text}
-                    {...formik.getFieldProps('username')}
-                    />
-                    <span className='icon flex items-center px-4'>
-                        <HiOutlineUser size={25} />
-                    </span>
+                        </div>
+                        {formik.errors.username && formik.touched.username && <span className={styles.error}>{formik.errors.username}</span>}
+
+                        <div className={`${styles.formGroup} ${formik.errors.email && formik.touched.email ? styles.error : ''}`}>
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                                className={styles.input}
+                                {...formik.getFieldProps('email')}
+                            />
+
+                        </div>
+                        {formik.errors.email && formik.touched.email && <span className={styles.error}>{formik.errors.email}</span>}
+
+                        <div className={`${styles.formGroup} ${formik.errors.password && formik.touched.password ? styles.error : ''}`}>
+                            <input
+                                type={`${show.password ? 'text' : 'password'}`}
+                                name="password"
+                                placeholder="Password"
+                                className={styles.input}
+                                {...formik.getFieldProps('password')}
+                            />
+                            {formik.errors.password && formik.touched.password && (
+                                <span className={styles.error}>{formik.errors.password}</span>
+                            )}
+                        </div>
+                        <div className={`${styles.formGroup} ${formik.errors.cpassword && formik.touched.cpassword ? styles.error : ''}`}>
+                            <input
+                                type={`${show.cpassword ? 'text' : 'password'}`}
+                                name="cpassword"
+                                placeholder="Confirm Password"
+                                className={styles.input}
+                                {...formik.getFieldProps('cpassword')}
+                            />
+                            {formik.errors.cpassword && formik.touched.cpassword && (
+                                <span className={styles.error}>{formik.errors.cpassword}</span>
+                            )}
+                        </div>
+
+                        {/* login buttons */}
+                        <div className="input-button">
+                            <button type="submit" className={styles.registerButton}>
+                                Sign Up
+                            </button>
+                        </div>
+                    </form>
+
+                    {/* bottom */}
+                    <div className={styles.signup}>
+                        คุณมีรหัสแล้วใช่ไหม ?{' '}
+                        <Link href="/login">
+                            <span className={styles.signupLink}>Sign In</span>
+                        </Link>
+                    </div>
                 </div>
-                {/* {formik.errors.username && formik.touched.username ? <span className='text-rose-500'>{formik.errors.username}</span> : <></>} */}
-                <div className={`${styles.input_group} ${formik.errors.email && formik.touched.email ? 'border-rose-600' : ''}`}>
-                    <input 
-                    type="email"
-                    name='email'
-                    placeholder='Email'
-                    className={styles.input_text}
-                    {...formik.getFieldProps('email')}
-                    />
-                    <span className='icon flex items-center px-4'>
-                        <HiAtSymbol size={25} />
-                    </span>
-                </div>
-                {/* {formik.errors.email && formik.touched.email ? <span className='text-rose-500'>{formik.errors.email}</span> : <></>} */}
-                <div className={`${styles.input_group} ${formik.errors.password && formik.touched.password ? 'border-rose-600' : ''}`}>
-                    <input 
-                    type={`${show.password ? "text" : "password"}`}
-                    name='password'
-                    placeholder='password'
-                    className={styles.input_text}
-                    {...formik.getFieldProps('password')}
-                    />
-                     <span className='icon flex items-center px-4' onClick={() => setShow({ ...show, password: !show.password})}>
-                        <HiFingerPrint size={25} />
-                    </span>
-                </div>
-                {/* {formik.errors.password && formik.touched.password ? <span className='text-rose-500'>{formik.errors.password}</span> : <></>} */}
-
-                <div className={`${styles.input_group} ${formik.errors.cpassword && formik.touched.cpassword ? 'border-rose-600' : ''}`}>
-                    <input 
-                    type={`${show.cpassword ? "text" : "password"}`}
-                    name='cpassword'
-                    placeholder='Confirm Password'
-                    className={styles.input_text}
-                    {...formik.getFieldProps('cpassword')}
-                    />
-                     <span className='icon flex items-center px-4' onClick={() => setShow({ ...show, cpassword: !show.cpassword})}>
-                        <HiFingerPrint size={25} />
-                    </span>
-                </div>
-                {/* {formik.errors.cpassword && formik.touched.cpassword ? <span className='text-rose-500'>{formik.errors.cpassword}</span> : <></>} */}
-
-                {/* login buttons */}
-                <div className="input-button">
-                    <button type='submit' className={styles.button}>
-                        Sign Up
-                    </button>
-                </div>
-            </form>
-
-            {/* bottom */}
-            <div className='text-center text-gray-400 '>
-                Have an account? <Link href={'/login'}><div className='text-blue-700'>Sign In</div></Link>
-            </div>
-        </section>
+            </section>
         </Layout>
-    )
+    );
 }
+
+
