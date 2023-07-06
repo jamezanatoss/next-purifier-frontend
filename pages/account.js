@@ -17,6 +17,7 @@ import SingleOrder from "@/components/SingleOrder";
 import Footer from "@/components/Footer";
 import OrderList from "@/components/OrderList";
 
+
 const ColsWrapper = styled.div`
   display:grid;
   grid-template-columns: 1.2fr .8fr;
@@ -53,11 +54,6 @@ export default function AccountPage() {
   const [activeTab, setActiveTab] = useState('Orders');
   const [orders, setOrders] = useState([]);
 
-  // const handleRemoveOrder = (orderId) => {
-  //   const updatedOrders = orders.filter((order) => order.id !== orderId);
-  //   console.log("updatedOrders",updatedOrders)
-  //   setOrders(updatedOrders);
-  // };
 
   const handleRemoveOrder = (orderId) => {
     Swal.fire({
@@ -107,6 +103,13 @@ export default function AccountPage() {
     const data = { name, email, city, streetAddress, postalCode, phone };
     axios.put('/api/address', data);
   }
+
+  useEffect(() => {
+    if (session) {
+      setEmail(session.user.email);
+    }
+  }, [session]);
+
   useEffect(() => {
     if (!session) {
       return;
@@ -114,15 +117,25 @@ export default function AccountPage() {
     setAddressLoaded(false);
     setWishlistLoaded(false);
     setOrderLoaded(false);
+
     axios.get('/api/address').then(response => {
-      setName(response.data.name);
-      setEmail(response.data.email);
-      setCity(response.data.city);
-      setPostalCode(response.data.postalCode);
-      setStreetAddress(response.data.streetAddress);
-      setPhone(response.data.phone);
-      setAddressLoaded(true);
+      if (response.status === 200) {
+        setName(response.data.name);
+        setEmail(response.data.email);
+        setCity(response.data.city);
+        setPostalCode(response.data.postalCode);
+        setStreetAddress(response.data.streetAddress);
+        setPhone(response.data.phone);
+        setAddressLoaded(true);
+      } else {
+        Swal.fire({
+          title: 'กรุณาใส่ข้อมูล address ให้ครบ',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      }
     });
+
     axios.get('/api/wishlist').then(response => {
       setWishedProducts(response.data.map(wp => wp.product));
       setWishlistLoaded(true);
@@ -211,10 +224,8 @@ export default function AccountPage() {
             <RevealWrapper delay={100}>
               <WhiteBox>
                 <h2>{session ? 'ข้อมูลผู้ใช้งาน' : 'เข้าสู่ระบบ'}</h2>
-                {!addressLoaded && (
-                  <Spinner fullWidth={true} />
-                )}
-                {addressLoaded && session && (
+                
+                {session && (
                   <>
                     <Input type="text"
                       placeholder="Name"
