@@ -14,6 +14,7 @@ import Swal from 'sweetalert2';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import ForgotPassword from '@/pages/ForgotPassword';
 
 const inputStyles = {
     display: 'flex',
@@ -132,6 +133,7 @@ const Login = () => {
                         <Link href="/register">
                             <div className={styles.signupLink}>Sign Up</div>
                         </Link>
+                        
                     </div>
                 </section>
             </Center>
